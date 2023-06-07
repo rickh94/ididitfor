@@ -1,0 +1,38 @@
+{% extends "base_external.html" %}
+{% load customfilters %}
+{% block content %}
+    <main id="main-content"
+          class="w-full bg-earth py-40 border-b-4 border-smoky">
+        <div id="hero"
+             class="mx-auto px-4 max-w-xl py-20 sm:py-44 lg:py-48 xl:py-72 container">
+            <form class="flex flex-col w-full" action="" method="post">
+                {% csrf_token %}
+                <h2 class="mt-10 text-4xl sm:text-6xl text-center font-bold teko leading-tight text-neutral-800">Login</h2>
+                <div class="text-tomato text-sm">{{ form.non_field_errors }}</div>
+                {% for field in form %}
+                    <div class="my-1 flex flex-col">
+                        <div class="text-tomato text-sm">{{ field.errors }}</div>
+                        <label for="{{ field.id_for_label }}" class="teko font-bold text-2xl">{{ field.label }}</label>
+                        {{ field|addclass:"form-control" }}
+                        {% if field.help_text %}<div class="text-sm montserrat text-neutral-700">{{ field.help_text }}</div>{% endif %}
+                    </div>
+                {% endfor %}
+                <div class="flex mt-2 justify-between space-x-2 w-full items-end">
+                  <div>
+                    <a href="{% url 'password_reset' %}" class="text-lg font-semibold leading-6 text-smoky flex items-center montserrat underline hover:underline-offset-2 hover:decoration-2">Forgot your password?</a>
+                  </div>
+                  <div class="flex flex-row-reverse justify-start">
+                    <button type="submit"
+                            class="ml-2 bg-jade px-4 py-2 text-2xl font-bold text-smoky border-smoky border-b-4 border-r-4 shadow-lg hover:border-t-4 hover:border-l-4 hover:border-r-0 hover:border-b-0 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-smoky">
+                        Submit
+                    </button>
+                    <button type="reset"
+                            class="ml-2 bg-tomato px-4 py-2 text-2xl font-bold text-smoky border-smoky border-b-4 border-r-4 shadow-lg hover:border-t-4 hover:border-l-4 hover:border-r-0 hover:border-b-0 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-smoky">
+                        Clear
+                    </button>
+                  </div>
+                </div>
+            </form>
+        </div>
+    </main>
+{% endblock content %}

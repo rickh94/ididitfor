@@ -1,0 +1,15 @@
+{% extends "base_internal.html" %}
+{% block content %}
+<!-- TODO: consider modals for this and the timer -->
+<noscript>
+  Javascript is required to use this page.
+</noscript>
+<main class="py-10 lg:pl-[19rem] px-4 min-h-full" id="main-content">
+  <!-- TODO: implement forms or ajax -->
+  <div class="overflow-hidden bg-earth/20 border-2 border-smoky shadow">
+    <div class="px-4 py-5 sm:p-6">
+      There's a stopwatch here for a new session for goal {{ goal }}
+    </div>
+  </div>
+</main>
+{% endblock content %}

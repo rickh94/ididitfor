@@ -1,0 +1,31 @@
+{% extends "base_internal.html" %}
+{% block content %}
+<main class="py-10 lg:pl-[19rem] px-4 min-h-full" id="main-content">
+  <div class="overflow-hidden bg-earth/20 border-2 border-smoky shadow">
+    <div class="px-4 py-5 sm:p-6">
+      <div>
+        <!-- TODO: make this prettier, more detail, back to goal, or make it a modal on the goals page -->
+        <h1
+          class="mt-2 mb-4 sm:mt-4 sm:mb-6 text-center text-xl sm:text-2xl monserrat border-b-8 px-4 pb-2 sm:px-8 border-smoky text-smoky">
+          I spent
+          <strong class="font-bold teko tracking-wider text-2xl sm:text-4xl text-tomato">
+            {{ session.duration_mins }}
+          </strong>
+          minutes
+          <br>
+          on
+          <strong class="font-bold teko tracking-wider text-2xl sm:text-4xl text-tomato">
+            {{ session.goal.name }}
+          </strong>
+          on
+          <strong class="font-bold teko tracking-wider text-2xl sm:text-4xl text-tomato">
+            {{ session.date }}
+          </strong>
+        </h1>
+        <p class="montserrat text-smoky/80 mx-2">{{ goal.description }}</p>
+        <!-- TODO: action buttons -->
+      </div>
+    </div>
+  </div>
+</main>
+{% endblock content %}

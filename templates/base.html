@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en" class="bg-mindaro h-full bg-opacity-20">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>I did it for</title>
+  {% load static %}
+  <link rel="stylesheet" href="{% static 'main.css' %}">
+  {% block head %}
+  {% endblock head %}
+  <link rel="apple-touch-icon" sizes="180x180" href="{% static 'apple-touch-icon.png' %}">
+  <link rel="icon" type="image/png" sizes="32x32" href="{% static 'favicon-32x32.png' %}">
+  <link rel="icon" type="image/png" sizes="16x16" href="{% static 'favicon-16x16.png' %}">
+  <link rel="manifest" href="{% static 'site.webmanifest' %}">
+  <script src="{% static 'alpine.js' %}" defer></script>
+  <script src="{% static 'main.js' %}"></script>
+</head>
+<body class="{% block body_class %}h-full{% endblock body_class %}" x-data="{ navOpen: false }">
+  <a tabindex="0" href="#main-content" role="button"
+    class="z-20 absolute opacity-100 top-0 left-0 ml-2 mt-2 -translate-y-14 transition duration-200 ease-out focus:translate-y-0 inline-flex items-center px-4 py-2 border border-transparent text-base font-medium rounded-md text-white bg-slate-800 focus:outline-none focus:ring-2 focus:ring-offset-2 ring-offset-violet-900 focus:ring-white z-200">
+    Skip to Content
+  </a>
+  {% block layout %}
+  {% endblock layout %}
+  
+  {% block script %}
+  {% endblock script %}
+</body>
+</html>

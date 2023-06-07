@@ -1,0 +1,52 @@
+{% extends "base_internal.html" %}
+{% load customfilters %}
+{% block content %}
+<main class="py-10 lg:pl-[19rem] px-4 min-h-full" id="main-content">
+  <div class="overflow-hidden bg-earth/20 border-2 border-smoky shadow">
+    <form class="px-4 py-5 sm:p-6 space-y-4" method="post" action="">
+      {% csrf_token %}
+      <h1
+        class="mt-2 mb-4 sm:mt-4 sm:mb-6 text-center text-3xl sm:text-5xl font-bold monserrat border-b-8 px-4 pb-2 sm:px-8 border-smoky text-smoky">
+        {% if form.name.value %}
+        Edit Goal
+        {% else %}
+        New Goal
+        {% endif %}
+      </h1>
+      <p class="text-4xl text-smoky">
+        I plan to
+        {{ form.name|addclass:"form-control" }}
+      </p>
+      <p class="text-4xl text-smoky">
+        for
+        {{ form.duration_min|addclass:"form-control" }} minutes
+      </p>
+      <p class="text-4xl text-smoky">
+        every
+        {{ form.unit_time|addclass:"form-control" }}
+      </p>
+      <div class="flex justify-start flex-row-reverse w-full">
+        <button type="submit"
+          class="flex items-center bg-jade px-5 pt-2 pb-1 ml-2 text-2xl font-bold text-smoky border-smoky border-b-4 border-r-4 shadow-lg hover:border-t-4 hover:border-l-4 hover:border-r-0 hover:border-b-0 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-smoky teko tracking-wide">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+            stroke="currentColor" class="w-6 h-6 -mt-1 mr-1">
+            <path stroke-linecap="round" stroke-linejoin="round"
+              d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+          </svg>
+          Save
+        </button>
+        <button type="reset"
+          class="flex items-center bg-tomato px-5 pt-2 pb-1 text-2xl font-bold text-smoky border-smoky border-b-4 border-r-4 shadow-lg hover:border-t-4 hover:border-l-4 hover:border-r-0 hover:border-b-0 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-smoky teko tracking-wide">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+            stroke="currentColor" class="w-6 h-6 -mt-1 mr-1">
+            <path stroke-linecap="round" stroke-linejoin="round"
+              d="M9.75 9.75l4.5 4.5m0-4.5l-4.5 4.5M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+          </svg>
+          Clear
+        </button>
+      </div>
+    </form>
+  </div>
+</main>
+<!-- TODO: add notes field -->
+{% endblock content %}

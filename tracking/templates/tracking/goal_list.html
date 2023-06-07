@@ -1,0 +1,59 @@
+{% extends "base_internal.html" %}
+{% block content %}
+<main class="py-10 lg:pl-[18.5rem] px-4 min-h-full" id="main-content">
+  <h1 class="font-bold text-4xl teko tracking-wide mb-2 lg:my-4 lg:ml-2">All Your Goals</h1>
+  <ul class="grid grid-cols-1  md:grid-cols-2 xl:grid-cols-3 gap-2" role="list">
+    {% for goal in goal_list %}
+    <li class="col-span-1 bg-earth border-smoky border-4 shadow flex flex-col h-full">
+      <div class="flex w-full items-center justify-between space-x-6 p-6 flex-1">
+        <div class="flex-1 truncate">
+          <div class="flex items-center space-x-3">
+            <h3 class="truncate text-lg font-bold text-smoky">{{ goal.name }}</h3>
+          </div>
+          <p class="mt-1 truncate text-smoky/80">{{ goal.description }}</p>
+        </div>
+      </div>
+      <div class="flex-0 border-t-2 border-smoky">
+        <div class="-mt-px flex divide-x-2 divide-smoky">
+          <div class="flex w-0 flex-1">
+            <a href="{% url 'goal_detail' pk=goal.id %}" hx-get="{% url 'goal_detail' pk=goal.id %}"
+              hx-swap="afterbegin" hx-target="#main-content" hx-push-url="{% url 'goal_detail' pk=goal.id %}"
+              class="bg-tomato relative -mr-px inline-flex w-0 flex-1 items-center justify-center gap-x-3 py-3 text-lg font-semibold text-smoky border-r-2 border-t-2 border-smoky border-t-transparent hover:border-t-smoky">
+              <!-- TODO change icon -->
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"
+                class="h-5 w-5 text-smoky">
+                <path
+                  d="M15 3.75H9v16.5h6V3.75zM16.5 20.25h3.375c1.035 0 1.875-.84 1.875-1.875V5.625c0-1.036-.84-1.875-1.875-1.875H16.5v16.5zM4.125 3.75H7.5v16.5H4.125a1.875 1.875 0 01-1.875-1.875V5.625c0-1.036.84-1.875 1.875-1.875z" />
+              </svg>
+              View
+            </a>
+          </div>
+          <div class="-ml-px flex w-0 flex-1">
+            <a href="" hx-get="" hx-target="#main-content" hx-swap="innerHTML" hx-push-url="/groups/{{ group.id }}"
+              class="relative bg-jade text-smoky inline-flex w-0 flex-1 items-center justify-center gap-x-3 py-3 text-lg font-semibold border-t-2 border-transparent hover:border-smoky">
+              <!-- TODO: implement this -->
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+                stroke="currentColor" class="w-6 h-6">
+                <path stroke-linecap="round" stroke-linejoin="round"
+                  d="M12 6v6h4.5m4.5 0a9 9 0 11-18 0 9 9 0 0118 0z" />
+              </svg>
+              Start Session
+            </a>
+          </div>
+        </div>
+      </div>
+    </li>
+    {% endfor %}
+    <li class="mt-2 col-span-1 bg-earth bg-opacity-50 border-dashed border-smoky border-4 shadow flex flex-col h-full">
+      <a href="{% url 'create_goal' %}" class="flex w-full items-center justify-between space-x-6 p-6 flex-1">
+        <div class="flex-1 truncate">
+          <div class="flex items-center space-x-3">
+            <h3 class="truncate text-xl font-bold text-smoky">New Goal</h3>
+          </div>
+          <p class="mt-1 truncate text-sm text-smoky/80">Click to create a new goal</p>
+        </div>
+      </a>
+    </li>
+  </ul>
+</main>
+{% endblock content %}
