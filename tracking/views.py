@@ -149,8 +149,10 @@ class StartTimerSession(generic.CreateView, LoginRequiredMixin):
         new_session.active = True
         new_session.save()
         return HttpResponseRedirect(
-            reverse("session_timer_running",
-                    goal_id=goal.id, pk=new_session.id)
+            reverse(
+                "running_timer_session",
+                kwargs={"goal_id": goal.id, "pk": new_session.id},
+            )
         )
 
     def get_initial(self):
@@ -174,7 +176,7 @@ class RunningTimerSession(generic.UpdateView, LoginRequiredMixin):
     fields = ("notes",)
     template_name = "running_timer_session.html"
 
-    def get_context_data(self, kwargs):
+    def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context["goal_id"] = self.kwargs["goal_id"]
         return context
@@ -184,7 +186,7 @@ class RunningTimerSession(generic.UpdateView, LoginRequiredMixin):
         updated_session.active = False
         updated_session.save()
         return HttpResponseRedirect(
-            reverse("goal_detail", goal_id=self.kwargs["goal_id"])
+            reverse("goal_detail", kwargs={"goal_id": self.kwargs["goal_id"]})
         )
 
     def get_queryset(self):

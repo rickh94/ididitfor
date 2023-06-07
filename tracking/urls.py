@@ -24,8 +24,8 @@ urlpatterns = [
     ),
     path(
         "goals/<int:goal_id>/session/<int:pk>/timer",
-        views.session_timer_running,
-        name="timer_session_running",
+        views.RunningTimerSession.as_view(),
+        name="running_timer_session",
     ),
     path(
         "goals/<int:goal_id>/session/stopwatch",

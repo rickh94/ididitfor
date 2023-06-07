@@ -1,2 +1,6 @@
 *.db
 staticfiles/main.css
+*.db-shm
+*.db-wal
+.pids
+*-litestream
