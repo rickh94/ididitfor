@@ -2,90 +2,108 @@
 {% load customfilters %}
 {% load static %}
 {% block content %}
-<script id="timer-data" data-duration-mins="{{ session.duration_mins }}"></script>
-<script src="{% static 'timer.js' %}"></script>
-<noscript>
-  Javascript is required to use this page.
-</noscript>
-<main class="py-10 lg:pl-[19rem] px-4 min-h-full" id="main-content">
-  <div class="overflow-hidden bg-earth/20 border-2 border-smoky shadow">
-    <div class="px-4 py-5 sm:p-6">
-        <h1
-          class="mt-2 mb-4 sm:mt-4 sm:mb-6 text-center text-3xl sm:text-5xl font-bold monserrat border-b-8 px-4 pb-2 sm:px-8 border-smoky text-smoky">
-          Timer
-        </h1>
-        <div id="timer" class="flex justify-center items-center text-center w-full text-8xl lg:text-[12rem] font-bold pointer-events-none" x-cloak x-show="$store.timer.ready">
-          <!-- TODO: use fixed width font so timer doesn't move around -->
-          <span x-data x-text="$store.timer.mins"></span>:
-          <span x-data x-text="$store.timer.secs"></span>
+    <script id="timer-data" data-duration-mins="{{ session.duration_mins }}"></script>
+    <script src="{% static 'timer.js' %}"></script>
+    <noscript>
+        Javascript is required to use this page.
+    </noscript>
+    <main class="py-10 lg:pl-[19rem] px-4 min-h-full" id="main-content">
+        <div class="overflow-hidden bg-earth/20 border-2 border-smoky shadow">
+            <div class="px-4 py-5 sm:p-6">
+                <h1 class="mt-2 mb-4 sm:mt-4 sm:mb-6 text-center text-3xl sm:text-5xl font-bold monserrat border-b-8 px-4 pb-2 sm:px-8 border-smoky text-smoky">
+                    Timer
+                </h1>
+                <div id="timer"
+                     class="flex font-mono justify-center items-center text-center w-full text-8xl sm:text-[10rem] lg:text-[12rem] font-bold pointer-events-none"
+                     x-cloak
+                     x-show="$store.timer.ready">
+                    <div x-data x-text="$store.timer.mins"></div>
+                    <div>:</div>
+                    <div x-data x-text="$store.timer.secs"></div>
+                </div>
+                <div id="timer-controls"
+                     class="w-full flex justify-center flex-row-reverse">
+                    <button @click="$store.timer.start()"
+                            x-show="!$store.timer.running"
+                            class="flex items-center bg-jade px-5 sm:px-10 pt-2 sm:pt-4 pb-1 sm:pb-2 ml-2 text-2xl sm:text-4xl font-bold text-smoky border-smoky border-b-4 border-r-4 shadow-lg hover:border-t-4 hover:border-l-4 hover:border-r-0 hover:border-b-0 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-smoky teko tracking-wide">
+                        <svg xmlns="http://www.w3.org/2000/svg"
+                             fill="none"
+                             viewBox="0 0 24 24"
+                             stroke-width="2"
+                             stroke="currentColor"
+                             class="w-6 h-6 sm:w-8 sm:h-8 -mt-1 mr-1">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M15.91 11.672a.375.375 0 010 .656l-5.603 3.113a.375.375 0 01-.557-.328V8.887c0-.286.307-.466.557-.327l5.603 3.112z" />
+                        </svg>
+                        <span x-text="$store.timer.started ? 'Resume' : 'Start' " x-data></span>
+                    </button>
+                    <button @click="$store.timer.pause()"
+                            x-cloak
+                            x-show="$store.timer.running"
+                            class="flex items-center bg-earth px-5 sm:px-10 pt-2 sm:pt-4 pb-1 sm:pb-2 ml-2 text-2xl sm:text-4xl font-bold text-smoky border-smoky border-b-4 border-r-4 shadow-lg hover:border-t-4 hover:border-l-4 hover:border-r-0 hover:border-b-0 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-smoky teko tracking-wide">
+                        <svg xmlns="http://www.w3.org/2000/svg"
+                             fill="none"
+                             viewBox="0 0 24 24"
+                             stroke-width="2"
+                             stroke="currentColor"
+                             class="w-6 h-6 sm:w-8 sm:h-8 -mt-1 -ml-2 mr-1">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M14.25 9v6m-4.5 0V9M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                        </svg>
+                        Pause
+                    </button>
+                    <button @click="$store.timer.reset()"
+                            class="flex items-center bg-tomato px-5 sm:px-10 pt-2 sm:pt-4 sm:pb-2 pb-1 ml-2 text-2xl sm:text-4xl font-bold text-smoky border-smoky border-b-4 border-r-4 shadow-lg hover:border-t-4 hover:border-l-4 hover:border-r-0 hover:border-b-0 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-smoky teko tracking-wide">
+                        <svg xmlns="http://www.w3.org/2000/svg"
+                             fill="none"
+                             viewBox="0 0 24 24"
+                             stroke-width="2"
+                             stroke="currentColor"
+                             class="w-6 h-6 sm:w-8 sm:h-8 -mt-1 mr-1">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M9.75 9.75l4.5 4.5m0-4.5l-4.5 4.5M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                        </svg>
+                        Reset
+                    </button>
+                    <!-- TODO: make buttons bigger/figure out size break points, change icons -->
+                </div>
+                <!-- TODO: only show notes form after the timer is complete -->
+                <!-- TODO: make buttons and functions for saving shorter session and deleting session -->
+                <form class="px-4 py-5 sm:p-6 space-y-4" method="post" action="">
+                    {% csrf_token %}
+                        <div class="my-1 flex flex-col">
+                            <div class="text-tomato text-sm">{{ form.notes.errors }}</div>
+                            <label for="{{ form.notes.id_for_label }}" class="teko font-bold text-2xl">{{ form.notes.label }}</label>
+                            {{ form.notes|addclass:"form-control h-32" }}
+                            {% if field.help_text %}<div class="text-sm montserrat text-neutral-700">{{ form.notes.help_text }}</div>{% endif %}
+                        </div>
+                    <div class="flex justify-start flex-row-reverse w-full">
+                        <button type="submit"
+                                class="flex items-center bg-jade px-5 pt-2 pb-1 ml-2 text-2xl font-bold text-smoky border-smoky border-b-4 border-r-4 shadow-lg hover:border-t-4 hover:border-l-4 hover:border-r-0 hover:border-b-0 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-smoky teko tracking-wide">
+                            <svg xmlns="http://www.w3.org/2000/svg"
+                                 fill="none"
+                                 viewBox="0 0 24 24"
+                                 stroke-width="1.5"
+                                 stroke="currentColor"
+                                 class="w-6 h-6 -mt-1 mr-1">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                            </svg>
+                            Save and End Session
+                        </button>
+                        <!-- TODO: make this delete the session -->
+                        <a href="{% url 'goal_detail' goal_id %}"
+                           class="flex items-center bg-tomato px-5 pt-2 pb-1 text-2xl font-bold text-smoky border-smoky border-b-4 border-r-4 shadow-lg hover:border-t-4 hover:border-l-4 hover:border-r-0 hover:border-b-0 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-smoky teko tracking-wide">
+                            <svg xmlns="http://www.w3.org/2000/svg"
+                                 fill="none"
+                                 viewBox="0 0 24 24"
+                                 stroke-width="1.5"
+                                 stroke="currentColor"
+                                 class="w-6 h-6 -mt-1 mr-1">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M9.75 9.75l4.5 4.5m0-4.5l-4.5 4.5M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                            </svg>
+                            Delete Session
+                        </a>
+                    </div>
+                </form>
+            </div>
         </div>
-        <div id="timer-controls" class="w-full flex justify-center flex-row-reverse">
-          <button @click="$store.timer.start()"
-            x-show="!$store.timer.running"
-            class="flex items-center bg-jade px-5 pt-2 pb-1 ml-2 text-2xl font-bold text-smoky border-smoky border-b-4 border-r-4 shadow-lg hover:border-t-4 hover:border-l-4 hover:border-r-0 hover:border-b-0 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-smoky teko tracking-wide">
-            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
-              stroke="currentColor" class="w-6 h-6 -mt-1 mr-1">
-              <path stroke-linecap="round" stroke-linejoin="round"
-                d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-            </svg>
-            <span x-text="$store.timer.started ? 'Resume' : 'Start' " x-data></span>
-          </button>
-          <button @click="$store.timer.pause()"
-            x-cloak
-            x-show="$store.timer.running"
-            class="flex items-center bg-earth px-5 pt-2 pb-1 ml-2 text-2xl font-bold text-smoky border-smoky border-b-4 border-r-4 shadow-lg hover:border-t-4 hover:border-l-4 hover:border-r-0 hover:border-b-0 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-smoky teko tracking-wide">
-            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
-              stroke="currentColor" class="w-6 h-6 -mt-1 mr-1">
-              <path stroke-linecap="round" stroke-linejoin="round"
-                d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-            </svg>
-            Pause
-          </button>
-          <button @click="$store.timer.reset()"
-            class="flex items-center bg-tomato px-5 pt-2 pb-1 ml-2 text-2xl font-bold text-smoky border-smoky border-b-4 border-r-4 shadow-lg hover:border-t-4 hover:border-l-4 hover:border-r-0 hover:border-b-0 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-smoky teko tracking-wide">
-            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
-              stroke="currentColor" class="w-6 h-6 -mt-1 mr-1">
-              <path stroke-linecap="round" stroke-linejoin="round"
-                d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-            </svg>
-            Reset
-          </button>
-          <!-- TODO: make buttons bigger/figure out size break points, change icons -->
-        </div>
-        <!-- TODO: only show notes form after the timer is complete -->
-        <!-- TODO: make buttons and functions for saving shorter session and deleting session -->
-      <form class="px-4 py-5 sm:p-6 space-y-4" method="post" action="">
-        {% csrf_token %}
-        {% for field in form %}
-        <div class="my-1 flex flex-col">
-          <div class="text-tomato text-sm">{{ field.errors }}</div>
-          <label for="{{ field.id_for_label }}" class="teko font-bold text-2xl">{{ field.label }}</label>
-          {{ field|addclass:"form-control" }}
-          {% if field.help_text %}<div class="text-sm montserrat text-neutral-700">{{field.help_text}}</div>{% endif %}
-        </div>
-        {% endfor %}
-        <div class="flex justify-start flex-row-reverse w-full">
-          <button type="submit"
-            class="flex items-center bg-jade px-5 pt-2 pb-1 ml-2 text-2xl font-bold text-smoky border-smoky border-b-4 border-r-4 shadow-lg hover:border-t-4 hover:border-l-4 hover:border-r-0 hover:border-b-0 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-smoky teko tracking-wide">
-            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
-              stroke="currentColor" class="w-6 h-6 -mt-1 mr-1">
-              <path stroke-linecap="round" stroke-linejoin="round"
-                d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-            </svg>
-            Start
-          </button>
-          <a href="{% url 'goal_detail' goal_id %}"
-            class="flex items-center bg-tomato px-5 pt-2 pb-1 text-2xl font-bold text-smoky border-smoky border-b-4 border-r-4 shadow-lg hover:border-t-4 hover:border-l-4 hover:border-r-0 hover:border-b-0 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-smoky teko tracking-wide">
-            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
-              stroke="currentColor" class="w-6 h-6 -mt-1 mr-1">
-              <path stroke-linecap="round" stroke-linejoin="round"
-                d="M9.75 9.75l4.5 4.5m0-4.5l-4.5 4.5M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-            </svg>
-            Cancel
-          </a>
-        </div>
-      </form>
-    </div>
-  </div>
-</main>
+    </main>
 {% endblock content %}

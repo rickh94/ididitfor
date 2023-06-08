@@ -5,6 +5,7 @@ document.addEventListener('alpine:init', function () {
     started: false,
     ticker: null,
     ready: false,
+    initialTime: null,
 
     start() {
       this.ticker = setInterval(() => {
@@ -40,6 +41,7 @@ document.addEventListener('alpine:init', function () {
         return;
       }
       this.secondsRemaining = durationMins * 60;
+      this.initialTime = durationMins * 60;
       this.completed = false;
       if (this.ticker) {
         clearInterval(this.ticker);
@@ -55,12 +57,20 @@ document.addEventListener('alpine:init', function () {
     },
 
     get secs() {
-      const s = Math.floor(this.secondsRemaining % 60);
+      const s = this.secondsRemaining % 60;
       return s.toString().padStart(2, "0");
     },
 
     get running() {
       return this.ticker != null;
+    },
+
+    get elapsedTimeSeconds() {
+      return this.initialTime - this.timeRemaining;
+    },
+
+    get elapsedTimeMins() {
+      return Math.round(this.elapsedTimeSeconds / 60);
     },
   });
 
