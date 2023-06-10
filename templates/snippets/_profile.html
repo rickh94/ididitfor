@@ -1,5 +1,5 @@
 {# TODO: create user profile #}
-<a href="#" hx-get="/profile" hx-target="#main-content" hx-swap="innerHTML" hx-push-url="/profile"
+<a href="{% url 'user_profile' %}" hx-get="/profile" hx-target="#main-content" hx-swap="innerHTML" hx-push-url="/profile"
   class="flex items-center justify-between gap-x-4 px-2 text-sm font-semibold leading-6 text-smoky hover:bg-smoky/20 teko tracking-wide">
   <span aria-hidden="true" class="text-lg">{% if request.user.name %}
     {{name}}

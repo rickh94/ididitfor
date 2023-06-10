@@ -5,6 +5,8 @@ start:
 	fi
 	litestream replicate -config litestream.dev.yml &
 	echo $! > .pids/litestream
+	caddy run --config $CADDYFILE &
+	echo $! > .pids/caddy
 
 stop:
 	#!/usr/bin/env bash

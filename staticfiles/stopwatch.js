@@ -48,6 +48,11 @@ document.addEventListener('alpine:init', function () {
     get running() {
       return this.ticker != null;
     },
+
+    get elapsedTimeMins() {
+      return Math.round(this.secondsPassed / 60);
+    },
+
   });
 
   Alpine.store('stopwatch').init();

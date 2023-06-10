@@ -1,5 +1,6 @@
 {% extends "base_internal.html" %}
 {% block content %}
+<!-- TODO: localize times on the client -->
 <main class="py-10 lg:pl-[19rem] px-4 min-h-full" id="main-content">
   <div class="overflow-hidden bg-earth/20 border-2 border-smoky shadow">
     <div class="px-4 py-5 sm:p-6">
@@ -26,7 +27,7 @@
         <h2 class="font-bold text-3xl monserrat border-b-4 border-smoky text-smoky pl-8 mb-4">New Session</h2>
         <!-- TODO: implement these forms -->
         <div class="flex flex-col sm:flex-row justify-start space-y-2 sm:space-y-0 sm:space-x-4 ml-4">
-          <a href="{% url 'start_timer_session' goal.id %}"
+          <a href="{% url 'create_timer_session' goal.id %}"
             class="flex items-center bg-jade px-5 pt-2 pb-1 text-xl font-semibold text-smoky border-smoky border-b-4 border-r-4 shadow-lg hover:border-t-4 hover:border-l-4 hover:border-r-0 hover:border-b-0 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-smoky teko tracking-wide">
             <svg height="512px" id="Layer_1" style="enable-background:new 0 0 512 512;" version="1.1"
               viewBox="0 0 512 512" width="512px" xml:space="preserve" xmlns="http://www.w3.org/2000/svg"
@@ -37,7 +38,7 @@
                 d="M256.2,48L256.2,48H256v112h16V65.3c97.8,8.3,175.3,90.5,175.3,190.5c0,105.5-85.7,191.4-191.2,191.4  c-105.5,0-191.3-85.8-191.3-191.3c0-52.8,21.5-100.6,56.1-135.2L109,108.9C71.3,146.6,48,198.6,48,256c0,114.9,93.1,208,208,208  c114.9,0,208-93.1,208-208C464,141.1,371,48,256.2,48z" />
             </svg>
             Timer</a>
-          <a href="{% url 'stopwatch_session' goal.id %}"
+          <a href="{% url 'create_stopwatch_session' goal.id %}"
             class="bg-earth px-5 pt-2 pb-1 text-xl font-semibold text-smoky border-smoky border-b-4 border-r-4 shadow-lg hover:border-t-4 hover:border-l-4 hover:border-r-0 hover:border-b-0 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-smoky teko tracking-wide flex items-center">
             <svg enable-background="new 0 0 48 48" height="48px" id="Layer_1" version="1.1" viewBox="0 0 48 48"
               width="48px" xml:space="preserve" xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 -mt-1 mr-1"

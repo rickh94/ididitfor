@@ -7,4 +7,5 @@ urlpatterns = [
     path("auth/", include("django.contrib.auth.urls")),
     path("", include("external.urls")),
     path("tracking/", include("tracking.urls")),
+    path("pauth/", include("passkey_auth.urls")),
 ]

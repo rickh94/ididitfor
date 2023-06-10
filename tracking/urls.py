@@ -18,9 +18,9 @@ urlpatterns = [
         name="session_detail",
     ),
     path(
-        "goals/<int:goal_id>/session/start-timer",
+        "goals/<int:goal_id>/session/new-timer",
         views.StartTimerSession.as_view(),
-        name="start_timer_session",
+        name="create_timer_session",
     ),
     path(
         "goals/<int:goal_id>/session/<int:pk>/timer",
@@ -28,8 +28,13 @@ urlpatterns = [
         name="running_timer_session",
     ),
     path(
-        "goals/<int:goal_id>/session/stopwatch",
-        views.session_stopwatch_view,
-        name="stopwatch_session",
+        "goals/<int:goal_id>/session/new-stopwatch",
+        views.start_stopwatch_session,
+        name="create_stopwatch_session",
+    ),
+    path(
+        "goals/<int:goal_id>/session/<int:pk>/stopwatch",
+        views.RunningStopwatchSession.as_view(),
+        name="running_stopwatch_session",
     ),
 ]

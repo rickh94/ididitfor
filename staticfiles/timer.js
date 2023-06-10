@@ -66,7 +66,7 @@ document.addEventListener('alpine:init', function () {
     },
 
     get elapsedTimeSeconds() {
-      return this.initialTime - this.timeRemaining;
+      return this.initialTime - this.secondsRemaining;
     },
 
     get elapsedTimeMins() {

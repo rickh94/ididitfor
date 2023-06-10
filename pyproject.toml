@@ -10,6 +10,7 @@ python = "^3.10"
 Django = "^4.2.1"
 dj-database-url = "^2.0.0"
 whitenoise = "^6.4.0"
+webauthn = "^1.8.1"
 
 [tool.poetry.group.dev.dependencies]
 black = "^23.3.0"
