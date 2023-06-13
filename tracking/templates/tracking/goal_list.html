@@ -2,7 +2,7 @@
 {% block content %}
 <main class="py-10 lg:pl-[18.5rem] px-4 min-h-full" id="main-content">
   <h1 class="font-bold text-4xl teko tracking-wide mb-2 lg:my-4 lg:ml-2">All Your Goals</h1>
-  <ul class="grid grid-cols-1  md:grid-cols-2 xl:grid-cols-3 gap-2" role="list">
+  <ul class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-2" role="list">
     {% for goal in goal_list %}
     <li class="col-span-1 bg-earth border-smoky border-4 shadow flex flex-col h-full">
       <div class="flex w-full items-center justify-between space-x-6 p-6 flex-1">
@@ -19,7 +19,6 @@
             <a href="{% url 'goal_detail' pk=goal.id %}" hx-get="{% url 'goal_detail' pk=goal.id %}"
               hx-swap="afterbegin" hx-target="#main-content" hx-push-url="{% url 'goal_detail' pk=goal.id %}"
               class="bg-tomato relative -mr-px inline-flex w-0 flex-1 items-center justify-center gap-x-3 py-3 text-lg font-semibold text-smoky border-r-2 border-t-2 border-smoky border-t-transparent hover:border-t-smoky">
-              <!-- TODO change icon -->
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"
                 class="h-5 w-5 text-smoky">
                 <path
@@ -44,7 +43,7 @@
       </div>
     </li>
     {% endfor %}
-    <li class="mt-2 col-span-1 bg-earth bg-opacity-50 border-dashed border-smoky border-4 shadow flex flex-col h-full">
+    <li class="mt-2 sm:mt-0 col-span-1 bg-earth bg-opacity-50 border-dashed border-smoky border-4 shadow flex flex-col h-full">
       <a href="{% url 'create_goal' %}" class="flex w-full items-center justify-between space-x-6 p-6 flex-1">
         <div class="flex-1 truncate">
           <div class="flex items-center space-x-3">

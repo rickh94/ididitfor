@@ -153,3 +153,7 @@ AUTHENTICATION_BACKENDS = [
     "django.contrib.auth.backends.ModelBackend",
     "passkey_auth.backend.PasskeyBackend",
 ]
+
+WEBAUTHN_RP_ID = os.getenv("WEBAUTHN_RP_ID")
+WEBAUTHN_SERVER_NAME = os.getenv("WEBAUTHN_SERVER_NAME")
+WEBAUTHN_ORIGIN = os.getenv("WEBAUTHN_ORIGIN")

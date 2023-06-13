@@ -65,6 +65,11 @@ class CreateSessionView(generic.CreateView, LoginRequiredMixin):
         "active",
     )
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["goal_id"] = self.kwargs["goal_id"]
+        return context
+
     def get_initial(self):
         goal = Goal.objects.filter(
             owner=self.request.user, id=self.kwargs["goal_id"]
@@ -110,14 +115,23 @@ class UpdateSessionView(generic.UpdateView, LoginRequiredMixin):
         "active",
     )
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["goal_id"] = self.kwargs["goal_id"]
+        return context
+
     def get_queryset(self):
         return Session.objects.filter(
             goal__owner=self.request.user, goal_id=self.kwargs["goal_id"]
         )
 
 
-class DeleteSessionView(generic.UpdateView, LoginRequiredMixin):
+class DeleteSessionView(generic.DeleteView, LoginRequiredMixin):
     model = Session
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        return context
 
     def get_queryset(self):
         return Session.objects.filter(

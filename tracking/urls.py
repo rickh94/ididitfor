@@ -37,4 +37,14 @@ urlpatterns = [
         views.RunningStopwatchSession.as_view(),
         name="running_stopwatch_session",
     ),
+    path(
+        "goals/<int:goal_id>/session/<int:pk>/update",
+        views.UpdateSessionView.as_view(),
+        name="update_session",
+    ),
+    path(
+        "goals/<int:goal_id>/session/<int:pk>/delete",
+        views.DeleteSessionView.as_view(),
+        name="delete_session",
+    ),
 ]

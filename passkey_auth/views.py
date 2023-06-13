@@ -2,6 +2,7 @@ import base64
 import datetime
 
 import webauthn
+from django.conf import settings
 from django.contrib.auth import authenticate, get_user_model, login
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponse, HttpResponseBadRequest
@@ -28,10 +29,9 @@ def user_profile(request):
 @require_GET
 @login_required
 def start_passkey_registration(request):
-    # TODO: un-hardcode
     pcco = webauthn.generate_registration_options(
-        rp_id="ididitfor.localhost",
-        rp_name="I Did it For",
+        rp_id=settings.WEBAUTHN_RP_ID,
+        rp_name=settings.WEBAUTHN_SERVER_NAME,
         user_id=str(request.user.id),
         user_name=request.user.username,
     )
@@ -60,12 +60,11 @@ def finish_passkey_registration(request):
             request.session["registration_state"] = None
             return HttpResponseBadRequest("Expired Challenge")
         expected = base64.b64decode(challenge_info["challenge"])
-        # TODO: un hard code
         verification = webauthn.verify_registration_response(
             credential=registration_credential,
             expected_challenge=expected,
-            expected_rp_id="ididitfor.localhost",
-            expected_origin="https://ididitfor.localhost",
+            expected_rp_id=settings.WEBAUTHN_RP_ID,
+            expected_origin=settings.WEBAUTHN_ORIGIN,
         )
     except InvalidRegistrationResponse as e:
         print(e)
@@ -99,9 +98,8 @@ def start_passkey_login(request):
         for credential in user.credentials.all()
     ]
 
-    # TODO: un-hardcode
     authentication_options = webauthn.generate_authentication_options(
-        rp_id="ididitfor.localhost",
+        rp_id=settings.WEBAUTHN_RP_ID,
         allow_credentials=allowed_credentials,
     )
 

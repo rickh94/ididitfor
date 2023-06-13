@@ -2,6 +2,7 @@ import base64
 import datetime
 
 import webauthn
+from django.conf import settings
 from django.contrib.auth import get_user_model
 from django.contrib.auth.backends import BaseBackend
 from webauthn.helpers.exceptions import InvalidAuthenticationResponse
@@ -39,19 +40,18 @@ class PasskeyBackend(BaseBackend):
         except User.DoesNotExist:
             return None
 
-        stored_credential = user.credentials.get(
+        stored_credential: PasskeyCredential = user.credentials.get(
             credential_id=webauthn.base64url_to_bytes(submitted_credential.id),
         )
 
         expected_challenge = base64.b64decode(auth_state["challenge"])
 
-        # TODO: un hardcode
         try:
             webauthn.verify_authentication_response(
                 credential=submitted_credential,
                 expected_challenge=expected_challenge,
-                expected_origin="https://ididitfor.localhost",
-                expected_rp_id="ididitfor.localhost",
+                expected_origin=settings.WEBAUTHN_ORIGIN,
+                expected_rp_id=settings.WEBAUTHN_RP_ID,
                 credential_public_key=stored_credential.credential_public_key,
                 credential_current_sign_count=0,
             )
