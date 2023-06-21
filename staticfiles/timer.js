@@ -24,6 +24,8 @@ document.addEventListener('alpine:init', function () {
       if (this.secondsRemaining <= 0) {
         this.pause();
         this.completed = true;
+        Alpine.store('notification').notify('Timer Completed', 'You finished your session!', 'success');
+        document.getElementById('alert').play();
       };
     },
 

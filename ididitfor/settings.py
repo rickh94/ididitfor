@@ -14,6 +14,9 @@ import os
 from pathlib import Path
 
 import dj_database_url
+import django_stubs_ext
+
+django_stubs_ext.monkeypatch()
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -40,6 +43,9 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "whitenoise.runserver_nostatic",
     "django.contrib.staticfiles",
+    "django.contrib.sites",
+    "django.contrib.sitemaps",
+    "django_htmx",
     "tracking",
     "external",
     "passkey_auth",
@@ -54,6 +60,7 @@ MIDDLEWARE = [
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
     "whitenoise.middleware.WhiteNoiseMiddleware",
+    "django_htmx.middleware.HtmxMiddleware",
 ]
 
 ROOT_URLCONF = "ididitfor.urls"
@@ -157,3 +164,5 @@ AUTHENTICATION_BACKENDS = [
 WEBAUTHN_RP_ID = os.getenv("WEBAUTHN_RP_ID")
 WEBAUTHN_SERVER_NAME = os.getenv("WEBAUTHN_SERVER_NAME")
 WEBAUTHN_ORIGIN = os.getenv("WEBAUTHN_ORIGIN")
+
+SITE_ID = 1

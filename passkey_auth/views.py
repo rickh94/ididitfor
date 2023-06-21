@@ -3,9 +3,16 @@ import datetime
 
 import webauthn
 from django.conf import settings
-from django.contrib.auth import authenticate, get_user_model, login
+from django.contrib import messages
+from django.contrib.auth import authenticate, login
 from django.contrib.auth.decorators import login_required
-from django.http import HttpResponse, HttpResponseBadRequest
+from django.contrib.auth.models import User
+from django.http import (
+    HttpRequest,
+    HttpResponse,
+    HttpResponseBadRequest,
+    HttpResponseServerError,
+)
 from django.shortcuts import render
 from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.http import require_GET, require_POST
@@ -15,25 +22,29 @@ from webauthn.helpers.structs import (
     RegistrationCredential,
 )
 
-from .models import PasskeyCredential
+from ididitfor.types import AuthenticatedHttpRequest
 
-User = get_user_model()
+from .models import PasskeyCredential
 
 
 @require_GET
 @login_required
-def user_profile(request):
+def user_profile(request: HttpRequest) -> HttpResponse:
+    if request.htmx and not request.htmx.boosted:
+        return render(request, "htmx/user_profile.html")
     return render(request, "user_profile.html", {})
 
 
 @require_GET
 @login_required
-def start_passkey_registration(request):
+def start_passkey_registration(request: AuthenticatedHttpRequest) -> HttpResponse:
+    if not settings.WEBAUTHN_RP_ID or not settings.WEBAUTHN_SERVER_NAME:
+        return HttpResponseServerError("Missing settings")
     pcco = webauthn.generate_registration_options(
         rp_id=settings.WEBAUTHN_RP_ID,
         rp_name=settings.WEBAUTHN_SERVER_NAME,
         user_id=str(request.user.id),
-        user_name=request.user.username,
+        user_name=str(request.user.username),
     )
     challenge = base64.b64encode(pcco.challenge).decode("utf-8")
     request.session["registration_state"] = {
@@ -47,7 +58,7 @@ def start_passkey_registration(request):
 @require_POST
 @csrf_exempt
 @login_required
-def finish_passkey_registration(request):
+def finish_passkey_registration(request: AuthenticatedHttpRequest) -> HttpResponse:
     registration_credential = RegistrationCredential.parse_raw(request.body)
 
     try:
@@ -60,6 +71,8 @@ def finish_passkey_registration(request):
             request.session["registration_state"] = None
             return HttpResponseBadRequest("Expired Challenge")
         expected = base64.b64decode(challenge_info["challenge"])
+        if not settings.WEBAUTHN_RP_ID or not settings.WEBAUTHN_ORIGIN:
+            return HttpResponseServerError("Missing settings")
         verification = webauthn.verify_registration_response(
             credential=registration_credential,
             expected_challenge=expected,
@@ -78,25 +91,26 @@ def finish_passkey_registration(request):
     )
     credential.save()
 
-    return HttpResponse("Passkey Created")
+    return HttpResponse(b"Passkey Created")
 
 
 @require_POST
 @csrf_exempt
-def start_passkey_login(request):
+def start_passkey_login(request: HttpRequest) -> HttpResponse:
     username = request.POST.get("username")
-    if not username:
-        return HttpResponseBadRequest("Username required")
+    if not username or type(username) != str:
+        return HttpResponseBadRequest(b"Username required")
     try:
-        user = User.objects.get(username=username.lower().strip())
+        user: User = User.objects.get(username=username.lower().strip())
     except User.DoesNotExist:
-        return HttpResponseBadRequest("Cannot log in with username")
-    # TODO: notification on frontend
-
+        return HttpResponseBadRequest(b"Cannot log in with username")
     allowed_credentials = [
         PublicKeyCredentialDescriptor(id=credential.credential_id)
         for credential in user.credentials.all()
     ]
+
+    if not settings.WEBAUTHN_RP_ID:
+        return HttpResponseServerError(b"Missing settings")
 
     authentication_options = webauthn.generate_authentication_options(
         rp_id=settings.WEBAUTHN_RP_ID,
@@ -106,7 +120,7 @@ def start_passkey_login(request):
     request.session["auth_state"] = {
         "challenge": base64.b64encode(authentication_options.challenge).decode("utf-8"),
         "created": datetime.datetime.now().timestamp(),
-        "user_id": user.id,
+        "user_id": user.pk,
     }
 
     return HttpResponse(
@@ -117,10 +131,12 @@ def start_passkey_login(request):
 
 @require_POST
 @csrf_exempt
-def finish_passkey_login(request):
+def finish_passkey_login(request: HttpRequest) -> HttpResponse:
     user = authenticate(request)
     if user is not None:
+        messages.success(request, "Login successful")
         login(request, user)
         return HttpResponse("Login successful")
     else:
+        messages.error(request, "Login failed")
         return HttpResponseBadRequest("Login Failed")

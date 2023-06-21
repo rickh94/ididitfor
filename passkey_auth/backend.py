@@ -1,16 +1,17 @@
 import base64
 import datetime
+from typing import Any, Optional
 
 import webauthn
 from django.conf import settings
-from django.contrib.auth import get_user_model
 from django.contrib.auth.backends import BaseBackend
+from django.contrib.auth.models import User
+from django.http import HttpRequest
+from pydantic import ValidationError
 from webauthn.helpers.exceptions import InvalidAuthenticationResponse
 from webauthn.helpers.structs import AuthenticationCredential
 
 from passkey_auth.models import PasskeyCredential
-
-User = get_user_model()
 
 
 class PasskeyBackend(BaseBackend):
@@ -18,14 +19,18 @@ class PasskeyBackend(BaseBackend):
     Authenticate against passkey credentials.
     """
 
-    def authenticate(self, request):
+    def authenticate(
+        self, request: Optional[HttpRequest], **kwargs: Any
+    ) -> User | None:
+        if not request:
+            return None
         auth_state = request.session.get("auth_state")
         if not auth_state:
             return None
         try:
             submitted_credential = AuthenticationCredential.parse_raw(
                 request.body)
-        except:
+        except ValidationError:
             return None
         if (
             datetime.datetime.fromtimestamp(auth_state["created"])
@@ -46,6 +51,9 @@ class PasskeyBackend(BaseBackend):
 
         expected_challenge = base64.b64decode(auth_state["challenge"])
 
+        if not settings.WEBAUTHN_ORIGIN or not settings.WEBAUTHN_RP_ID:
+            return None
+
         try:
             webauthn.verify_authentication_response(
                 credential=submitted_credential,
@@ -60,7 +68,7 @@ class PasskeyBackend(BaseBackend):
         except InvalidAuthenticationResponse:
             return None
 
-    def get_user(self, user_id):
+    def get_user(self, user_id: int) -> User | None:
         try:
             return User.objects.get(pk=user_id)
         except User.DoesNotExist:

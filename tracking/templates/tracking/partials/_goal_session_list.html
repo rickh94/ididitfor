@@ -1,0 +1,86 @@
+{% load customfilters %}
+<div
+  class="relative z-50"
+  aria-labelledby="modal-title"
+  role="dialog"
+  aria-modal="true"
+  id="all-sessions-list"
+>
+  <div class="fixed inset-0 bg-smoky/50 hx-fade-in hx-fade-out"></div>
+  <div class="fixed inset-0 z-50 overflow-y-auto">
+    <div
+      class="flex min-h-full items-end justify-center p-4 text-center sm:items-center sm:p-0"
+    >
+      <div
+        class="relative transform overflow-hidden border-smoky border-2 bg-white px-4 pb-4 pt-5 text-left shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-lg sm:p-6 hx-fade-in hx-scale-in hx-fade-out hx-scale-out"
+      >
+        <div class="flex justify-between">
+          <div>
+            <h3
+              class="font-bold text-3xl monserrat border-b-4 border-smoky text-smoky px-4 mb-4"
+            >
+              All Sessions
+            </h3>
+          </div>
+          <a
+            href="{% url 'goal_detail' goal.id %}"
+            hx-get="{% url 'goal_detail' goal.id %}"
+            hx-swap="delete swap:200ms"
+            hx-target="#all-sessions-list"
+            hx-push-url="{% url 'goal_detail' goal.id %}"
+            class="text-smoky hover:text-tomato-500"
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke-width="2"
+              stroke="currentColor"
+              class="w-8 h-8 ml-2"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                d="M9.75 9.75l4.5 4.5m0-4.5l-4.5 4.5M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+              />
+            </svg>
+            <span class="sr-only">Close </span>
+          </a>
+        </div>
+        <ul role="list" class="space-y-2">
+          {% for session in all_sessions %}
+          <li class="mx-2 border-4 border-smoky hover:border-jade-500">
+            <a
+              href="{% url 'session_detail' goal.id session.id %}"
+              hx-get="{% url 'session_detail' goal.id session.id %}"
+              hx-swap="delelete swap:200ms"
+              hx-target="#all-sessions-list"
+              hx-push-url="{% url 'session_detail' goal.id session.id %}"
+              class="p-2 text-xl w-full h-full block"
+            >
+              <strong
+                class="font-bold text-tomato-500 teko tracking-wider text-2xl"
+                >{{ session.duration_mins }}</strong
+              >
+              mins on
+              <strong
+                x-data
+                x-localdate="{{ session|session_utc }}"
+                class="font-bold text-tomato-500 teko tracking-wider text-2xl"
+                >{{ session.date }}</strong
+              >at
+              <strong
+                x-data
+                x-localtime="{{ session|session_utc }}"
+                class="font-bold text-tomato-500 teko tracking-wider text-2xl"
+                >{{ session.start_time }}</strong
+              >
+            </a>
+          </li>
+          {% endfor %}
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+{# vim: se ft=htmldjango : #}

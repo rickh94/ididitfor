@@ -1,0 +1,44 @@
+{% load customfilters %}
+{% block content %}
+{% endblock content %}
+{% if messages %}
+    <div aria-live="assertive"
+         x-data
+         class="pointer-events-none fixed inset-0 flex items-end px-4 py-6 sm:items-start sm:p-6 mt-1">
+        {% for message in messages %}
+            <div class="pointer-events-auto w-full max-w-sm {{ message.level|message_color }} overflow-hidden border-smoky border-2 shadow-lg ring-1 ring-black ring-opacity-5 transition-all duration-300 ease-in-out"
+                 x-data="{show: true}"
+                 x-show="show"
+                 x-transition:enter="transition ease-out duration-300 transform"
+                 x-transition:enter-start="opacity-0 translate-y-2 sm:translate-y-0 sm:translate-x-2"
+                 x-transition:enter-end="opacity-100 translate-y-0 sm:translate-x-0"
+                 x-transition:leave="transition ease-in duration-200"
+                 x-transition:leave-start="opacity-100"
+                 x-transition:leave-end="opacity-0"
+                 data-django-message=""
+                 data-auto-hide="1"
+                 id="message-{{ forloop.counter }}">
+                <div class="p-4">
+                    <div class="flex items-start">
+                        <div class="ml-3 w-0 flex-1 pt-0.5">
+                            <p class="text-lg text-smoky font-bold">{{ message }}</p>
+                        </div>
+                        <div class="ml-4 flex flex-shrink-0">
+                            <button type="button"
+                                    @click="show = false"
+                                    class="inline-flex rounded-md bg-transparent text-smoky hover:text-tomato-500 focus:outline-none focus:ring-2 focus:ring-tomato-500-500 focus:ring-offset-2">
+                                <span class="sr-only">Close</span>
+                                <svg class="h-5 w-5"
+                                     viewBox="0 0 20 20"
+                                     fill="currentColor"
+                                     aria-hidden="true">
+                                    <path d="M6.28 5.22a.75.75 0 00-1.06 1.06L8.94 10l-3.72 3.72a.75.75 0 101.06 1.06L10 11.06l3.72 3.72a.75.75 0 101.06-1.06L11.06 10l3.72-3.72a.75.75 0 00-1.06-1.06L10 8.94 6.28 5.22z" />
+                                </svg>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+{% endif %}

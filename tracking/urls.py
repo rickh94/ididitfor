@@ -7,6 +7,13 @@ urlpatterns = [
     path("goals/create/", views.CreateGoalView.as_view(), name="create_goal"),
     path("goals/<int:pk>/", views.GoalDetailView.as_view(), name="goal_detail"),
     path("goals/<int:pk>/edit/", views.UpdateGoalView.as_view(), name="edit_goal"),
+    path("goals/<int:pk>/delete/",
+         views.DeleteGoalView.as_view(), name="delete_goal"),
+    path(
+        "goals/<int:pk>/sessions/",
+        views.GoalSessionList.as_view(),
+        name="goal_session_list",
+    ),
     path(
         "goals/<int:goal_id>/session/enter",
         views.CreateSessionView.as_view(),

@@ -1,29 +1,115 @@
 <!DOCTYPE html>
+{% load customfilters %}
 <html lang="en" class="bg-mindaro h-full bg-opacity-20">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>I did it for</title>
-  {% load static %}
-  <link rel="stylesheet" href="{% static 'main.css' %}">
-  {% block head %}
-  {% endblock head %}
-  <link rel="apple-touch-icon" sizes="180x180" href="{% static 'apple-touch-icon.png' %}">
-  <link rel="icon" type="image/png" sizes="32x32" href="{% static 'favicon-32x32.png' %}">
-  <link rel="icon" type="image/png" sizes="16x16" href="{% static 'favicon-16x16.png' %}">
-  <link rel="manifest" href="{% static 'site.webmanifest' %}">
-  <script src="{% static 'alpine.js' %}" defer></script>
-  <script src="{% static 'main.js' %}"></script>
-</head>
-<body class="{% block body_class %}h-full{% endblock body_class %}" x-data="{ navOpen: false }">
-  <a tabindex="0" href="#main-content" role="button"
-    class="z-20 absolute opacity-100 top-0 left-0 ml-2 mt-2 -translate-y-14 transition duration-200 ease-out focus:translate-y-0 inline-flex items-center px-4 py-2 border border-transparent text-base font-medium rounded-md text-white bg-slate-800 focus:outline-none focus:ring-2 focus:ring-offset-2 ring-offset-violet-900 focus:ring-white z-200">
-    Skip to Content
-  </a>
-  {% block layout %}
-  {% endblock layout %}
-  
-  {% block script %}
-  {% endblock script %}
-</body>
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>I did it for</title>
+        {% load static %}
+        <link rel="stylesheet" href="{% static 'main.css' %}">
+        {% block head %}
+        {% endblock head %}
+        <link rel="apple-touch-icon"
+              sizes="180x180"
+              href="{% static 'apple-touch-icon.png' %}">
+        <link rel="icon"
+              type="image/png"
+              sizes="32x32"
+              href="{% static 'favicon-32x32.png' %}">
+        <link rel="icon"
+              type="image/png"
+              sizes="16x16"
+              href="{% static 'favicon-16x16.png' %}">
+        <link rel="manifest" href="{% static 'site.webmanifest' %}">
+        <script src="{% static 'htmx.min.js' %}" defer></script>
+        <script src="{% static 'alpine.js' %}" defer></script>
+        <script src="{% static 'main.js' %}"></script>
+    </head>
+    <body class="{% block body_class %}h-full{% endblock body_class %}">
+        <a tabindex="0"
+           href="#main-content"
+           role="button"
+           class="z-20 absolute opacity-100 top-0 left-0 ml-2 mt-2 -translate-y-14 transition duration-200 ease-out focus:translate-y-0 inline-flex items-center px-4 py-2 border border-transparent text-base font-medium rounded-md text-white bg-slate-800 focus:outline-none focus:ring-2 focus:ring-offset-2 ring-offset-violet-900 focus:ring-white z-200">
+            Skip to Content
+        </a>
+        {% block layout %}
+        {% endblock layout %}
+        {% block script %}
+        {% endblock script %}
+        <div aria-live="assertive"
+             x-data
+             class="pointer-events-none fixed inset-0 flex items-end px-4 py-6 sm:items-start sm:p-6 mt-1">
+            <div class="flex w-full flex-col items-center space-y-4 sm:items-end">
+                <template x-data x-for="message in $store.notification.messages">
+                    <div class="pointer-events-auto w-full max-w-sm overflow-hidden border-smoky border-2 shadow-lg ring-1 ring-black ring-opacity-5 transition-all duration-300 ease-in-out"
+                         :class="{ 'bg-jade-100': message.level === 'success', 'bg-tomato-200': message.level === 'error' || message.level === 'debug', 'bg-sky-200': message.level === 'info', 'bg-mindaro-200': message.level === 'warning' }"
+                         x-transition:enter="transition ease-out duration-300 transform"
+                         x-transition:enter-start="opacity-0 translate-y-2 sm:translate-y-0 sm:translate-x-2"
+                         x-transition:enter-end="opacity-100 translate-y-0 sm:translate-x-0"
+                         x-transition:leave="transition ease-in duration-200"
+                         x-transition:leave-start="opacity-100"
+                         x-transition:leave-end="opacity-0">
+                        <div class="p-4">
+                            <div class="flex items-start">
+                                <div class="ml-3 w-0 flex-1 pt-0.5">
+                                    <p class="text-sm font-medium text-gray-900" x-text="message.title"></p>
+                                    <p class="mt-1 text-sm text-gray-500" x-text="message.text"></p>
+                                </div>
+                                <div class="ml-4 flex flex-shrink-0">
+                                    <button type="button"
+                                            @click="$store.notification.clearMessage(message.messageId)"
+                                            class="inline-flex rounded-md bg-transparent text-smoky hover:text-tomato-500 focus:outline-none focus:ring-2 focus:ring-tomato-500-500 focus:ring-offset-2">
+                                        <span class="sr-only">Close</span>
+                                        <svg class="h-5 w-5"
+                                             viewBox="0 0 20 20"
+                                             fill="currentColor"
+                                             aria-hidden="true">
+                                            <path d="M6.28 5.22a.75.75 0 00-1.06 1.06L8.94 10l-3.72 3.72a.75.75 0 101.06 1.06L10 11.06l3.72 3.72a.75.75 0 101.06-1.06L11.06 10l3.72-3.72a.75.75 0 00-1.06-1.06L10 8.94 6.28 5.22z" />
+                                        </svg>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </template>
+                {% if messages %}
+                    {% for message in messages %}
+                        <div class="pointer-events-auto w-full max-w-sm {{ message.level|message_color }} overflow-hidden border-smoky border-2 shadow-lg ring-1 ring-black ring-opacity-5 transition-all duration-300 ease-in-out"
+                             x-data="{show: true}"
+                             x-show="show"
+                             x-transition:enter="transition ease-out duration-300 transform"
+                             x-transition:enter-start="opacity-0 translate-y-2 sm:translate-y-0 sm:translate-x-2"
+                             x-transition:enter-end="opacity-100 translate-y-0 sm:translate-x-0"
+                             x-transition:leave="transition ease-in duration-200"
+                             x-transition:leave-start="opacity-100"
+                             x-transition:leave-end="opacity-0"
+                             data-django-message=""
+                             data-auto-hide="1"
+                             id="message-{{ forloop.counter }}">
+                            <div class="p-4">
+                                <div class="flex items-start">
+                                    <div class="ml-3 w-0 flex-1 pt-0.5">
+                                        <p class="text-lg text-smoky font-bold">{{ message }}</p>
+                                    </div>
+                                    <div class="ml-4 flex flex-shrink-0">
+                                        <button type="button"
+                                                @click="show = false"
+                                                class="inline-flex rounded-md bg-transparent text-smoky hover:text-tomato-500 focus:outline-none focus:ring-2 focus:ring-tomato-500-500 focus:ring-offset-2">
+                                            <span class="sr-only">Close</span>
+                                            <svg class="h-5 w-5"
+                                                 viewBox="0 0 20 20"
+                                                 fill="currentColor"
+                                                 aria-hidden="true">
+                                                <path d="M6.28 5.22a.75.75 0 00-1.06 1.06L8.94 10l-3.72 3.72a.75.75 0 101.06 1.06L10 11.06l3.72 3.72a.75.75 0 101.06-1.06L11.06 10l3.72-3.72a.75.75 0 00-1.06-1.06L10 8.94 6.28 5.22z" />
+                                            </svg>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    {% endfor %}
+                {% endif %}
+            </div>
+        </div>
+    </body>
 </html>

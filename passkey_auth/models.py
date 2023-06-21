@@ -12,5 +12,5 @@ class PasskeyCredential(models.Model):
     credential_public_key = models.BinaryField(null=False, blank=False)
     current_sign_count = models.IntegerField()
 
-    def __str__(self):
-        return f"<Credential {self.credential_id}>"
+    def __str__(self) -> str:
+        return f"<Credential for {self.user}>"

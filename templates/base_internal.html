@@ -1,4 +1,5 @@
 {% extends "base.html" %}
+{% block body_class %}h-full bg-gradient-to-br from-earth/20 via-earth/20 to-tomato-100{% endblock %}
 {% block layout %}
     {% include "snippets/_sidebar.html" %}
     {% block content %}
@@ -33,7 +34,7 @@
                 </svg>
             </a>
             <div class="mt-8 md:mt-0">
-                <p class="text-center text-base text-jade">&copy; 2023 Rick Henry Development. All rights reserved.</p>
+                <p class="text-center text-base text-jade-500">&copy; 2023 Rick Henry Development. All rights reserved.</p>
             </div>
         </div>
     </footer>

@@ -6,12 +6,13 @@
         <div id="hero"
              class="px-4 mx-auto max-w-2xl py-32 sm:py-44 lg:py-48 xl:py-72 container">
             <div class="flex flex-col text-center w-full">
-                <h1 class="text-6xl font-bold text-smoky sm:text-8xl teko tracking-tight">I did it for...</h1>
+                <h1 class="text-6xl font-bold text-smoky sm:text-8xl teko tracking-tight">I did it for<span class="tracking-wide">...</span></h1>
                 <!-- TODO: maybe make this somewhat random -->
-                <p class="text-5xl sm:text-7xl tracking-tight text-gray-800 teko">...30 minutes!</p>
+                <p class="text-5xl sm:text-7xl tracking-tight text-gray-800 teko">
+                <span class="tracking-wide">...</span>{{ random_mins }} minutes!</p>
                 <div class="mt-10 flex items-center justify-center gap-x-6 tracking-normal montserrat">
                     <a href="{% url 'register' %}"
-                       class="bg-jade px-5 py-2 text-2xl font-semibold text-smoky border-smoky border-b-4 border-r-4 shadow-lg hover:border-t-4 hover:border-l-4 hover:border-r-0 hover:border-b-0 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-smoky">Get
+                       class="bg-jade-500 px-5 py-2 text-2xl font-semibold text-smoky border-smoky border-b-4 border-r-4 shadow-lg hover:border-t-4 hover:border-l-4 hover:border-r-0 hover:border-b-0 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-smoky">Get
                     started</a>
                     <a href="#about"
                        class="text-2xl font-semibold leading-6 text-smoky flex items-center">

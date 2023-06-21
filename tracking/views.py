@@ -1,61 +1,148 @@
 import datetime
+from typing import Any
 
+from django.contrib import messages
+from django.contrib.auth import get_user_model
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.core.exceptions import ObjectDoesNotExist
-from django.http import HttpResponseForbidden, HttpResponseNotFound
+from django.db.models import QuerySet
+from django.forms import ModelForm
+from django.http import (
+    HttpRequest,
+    HttpResponse,
+    HttpResponseForbidden,
+    HttpResponseNotFound,
+)
 from django.http.response import HttpResponseRedirect
-from django.shortcuts import render
 from django.urls import reverse, reverse_lazy
 from django.views import generic
-from django.views.decorators.http import require_GET, require_http_methods
+from django.views.decorators.http import require_GET
+
+from ididitfor.types import AuthenticatedHttpRequest
 
 from .models import Goal, Session
 
+User = get_user_model()
 
-class GoalListView(generic.ListView, LoginRequiredMixin):
+
+class GoalListView(generic.ListView[Goal], LoginRequiredMixin):
     model = Goal
 
-    def get_queryset(self):
-        return Goal.objects.filter(owner=self.request.user)
+    def get_queryset(self) -> QuerySet[Goal]:
+        return Goal.objects.filter(owner=self.request.user)  # type: ignore
+
+    def get_template_names(self) -> list[str]:
+        if self.request.htmx and not self.request.htmx.boosted:
+            return ["tracking/htmx/goal_list.html"]
+        else:
+            return ["tracking/goal_list.html"]
 
 
-class CreateGoalView(generic.CreateView, LoginRequiredMixin):
+class CreateGoalView(generic.CreateView[Goal, ModelForm[Goal]], LoginRequiredMixin):
     model = Goal
-    fields = ("name", "description", "duration_min", "unit_time", "start_date")
+    fields = ("name", "description", "duration_mins",
+              "unit_time", "start_date")
 
-    def form_valid(self, form):
-        obj = form.save(commit=False)
-        obj.owner = self.request.user
-        obj.save()
-        return HttpResponseRedirect(obj.get_absolute_url())
+    def form_valid(self, form: ModelForm[Goal]) -> HttpResponse:
+        new_goal = form.save(commit=False)
+        new_goal.owner = self.request.user  # type: ignore
+        new_goal.save()
+        messages.success(self.request, f"Goal {new_goal.name} created")
+        return HttpResponseRedirect(new_goal.get_absolute_url())
+
+    def get_template_names(self) -> list[str]:
+        if self.request.htmx and not self.request.htmx.boosted:
+            return ["tracking/htmx/goal_form.html"]
+        else:
+            return ["tracking/goal_form.html"]
 
 
-class UpdateGoalView(generic.UpdateView, LoginRequiredMixin):
+class UpdateGoalView(generic.UpdateView[Goal, ModelForm[Goal]], LoginRequiredMixin):
     model = Goal
-    fields = ("name", "description", "duration_min", "unit_time")
+    fields = ("name", "description", "duration_mins", "unit_time")
 
-    def get_queryset(self):
-        return Goal.objects.filter(owner=self.request.user)
+    def get_queryset(self) -> QuerySet[Goal]:
+        return Goal.objects.filter(owner=self.request.user)  # type: ignore
+
+    def form_valid(self, form: ModelForm[Goal]) -> HttpResponse:
+        new_goal = form.save()
+        messages.success(self.request, f"Goal {new_goal.name} updated")
+        return HttpResponseRedirect(new_goal.get_absolute_url())
+
+    def get_template_names(self) -> list[str]:
+        if self.request.htmx and not self.request.htmx.boosted:
+            return ["tracking/htmx/goal_form.html"]
+        else:
+            return ["tracking/goal_form.html"]
 
 
-class GoalDetailView(generic.DetailView, LoginRequiredMixin):
+class GoalDetailView(generic.DetailView[Goal], LoginRequiredMixin):
     model = Goal
 
-    def get_queryset(self):
-        return Goal.objects.filter(owner=self.request.user)
+    def get_queryset(self) -> QuerySet[Goal]:
+        return Goal.objects.filter(owner=self.request.user)  # type: ignore
+
+    def get_context_data(self, **kwargs: Any) -> dict[str, Any]:
+        context = super().get_context_data(**kwargs)
+        context["sessions"] = self.object.sessions.order_by("-date")[:10]
+        return context
+
+    def get_template_names(self) -> list[str]:
+        if self.request.htmx and not self.request.htmx.boosted:
+            return ["tracking/htmx/goal_detail.html"]
+        else:
+            return ["tracking/goal_detail.html"]
 
 
-class DeleteGoalView(generic.DeleteView, LoginRequiredMixin):
+class DeleteGoalView(generic.DeleteView, LoginRequiredMixin):  # type: ignore
     model = Goal
     success_url = reverse_lazy("goal_list")
 
-    def get_queryset(self):
-        return Goal.objects.filter(owner=self.request.user)
+    def get_queryset(self) -> QuerySet[Goal]:
+        return Goal.objects.filter(owner=self.request.user)  # type: ignore
+
+    def get_context_data(self, **kwargs: Any) -> dict[str, Any]:
+        context = super().get_context_data(**kwargs)
+        context["sessions"] = self.object.sessions.order_by("-date")[:10]
+        return context
+
+    def delete(self, request: HttpRequest, *args: Any, **kwargs: Any) -> HttpResponse:
+        self.object = self.get_object()
+        self.object.delete()
+        messages.success(self.request, f"Goal {self.object.name} deleted")
+        return HttpResponseRedirect(self.get_success_url())
+
+    def get_template_names(self) -> list[str]:
+        if self.request.htmx and not self.request.htmx.boosted:
+            return ["tracking/htmx/goal_confirm_delete.html"]
+        else:
+            return ["tracking/goal_confirm_delete.html"]
+
+
+class GoalSessionList(generic.DetailView[Goal], LoginRequiredMixin):
+    model = Goal
+
+    def get_queryset(self) -> QuerySet[Goal]:
+        return Goal.objects.filter(owner=self.request.user)  # type: ignore
+
+    def get_context_data(self, **kwargs: Any) -> dict[str, Any]:
+        context = super().get_context_data(**kwargs)
+        context["sessions"] = self.object.sessions.order_by("-date")[:10]
+        context["all_sessions"] = self.object.sessions.order_by("-date")
+        return context
+
+    def get_template_names(self) -> list[str]:
+        if self.request.htmx and not self.request.htmx.boosted:
+            return ["tracking/htmx/goal_session_list.html"]
+        else:
+            return ["tracking/goal_session_list.html"]
 
 
 # TODO: change date widget to native date picker
-class CreateSessionView(generic.CreateView, LoginRequiredMixin):
+class CreateSessionView(
+    generic.CreateView[Session, ModelForm[Session]], LoginRequiredMixin
+):
     model = Session
     fields = (
         "duration_mins",
@@ -65,13 +152,13 @@ class CreateSessionView(generic.CreateView, LoginRequiredMixin):
         "active",
     )
 
-    def get_context_data(self, **kwargs):
+    def get_context_data(self, **kwargs: Any) -> dict[str, Any]:
         context = super().get_context_data(**kwargs)
         context["goal_id"] = self.kwargs["goal_id"]
         return context
 
-    def get_initial(self):
-        goal = Goal.objects.filter(
+    def get_initial(self) -> dict[str, Any]:
+        goal = Goal.objects.filter(  # type: ignore
             owner=self.request.user, id=self.kwargs["goal_id"]
         ).first()
         if not goal:
@@ -79,33 +166,48 @@ class CreateSessionView(generic.CreateView, LoginRequiredMixin):
         return {
             "date": datetime.date.today(),
             "start_time": datetime.datetime.now(),
-            "duration_mins": goal.duration_mins,
+            "duration_mins": goal.mins_remaining,
         }
 
-    def form_valid(self, form):
-        goal = Goal.objects.filter(
+    def form_valid(self, form: ModelForm[Session]) -> HttpResponse:
+        goal = Goal.objects.filter(  # type: ignore
             owner=self.request.user, id=self.kwargs["goal_id"]
         ).first()
         if not goal:
-            return HttpResponseForbidden(
-                "Not sure how you got here but it's not allowed"
-            )
+            return HttpResponseNotFound("Goal does not exist")
         new_session = form.save(commit=False)
         new_session.goal = goal
         new_session.save()
+        messages.success(
+            self.request, f"Session created for goal {new_session.goal.name}"
+        )
         return HttpResponseRedirect(new_session.get_absolute_url())
 
+    def get_template_names(self) -> list[str]:
+        if self.request.htmx and not self.request.htmx.boosted:
+            return ["tracking/htmx/session_form.html"]
+        else:
+            return ["tracking/session_form.html"]
 
-class SessionDetailView(generic.DetailView, LoginRequiredMixin):
+
+class SessionDetailView(generic.DetailView[Session], LoginRequiredMixin):
     model = Session
 
-    def get_queryset(self):
-        return Session.objects.filter(
+    def get_queryset(self) -> QuerySet[Session]:
+        return Session.objects.filter(  # type: ignore
             goal__owner=self.request.user, goal_id=self.kwargs["goal_id"]
         )
 
+    def get_template_names(self) -> list[str]:
+        if self.request.htmx and not self.request.htmx.boosted:
+            return ["tracking/htmx/session_detail.html"]
+        else:
+            return ["tracking/session_detail.html"]
 
-class UpdateSessionView(generic.UpdateView, LoginRequiredMixin):
+
+class UpdateSessionView(
+    generic.UpdateView[Session, ModelForm[Session]], LoginRequiredMixin
+):
     model = Session
     fields = (
         "duration_mins",
@@ -115,41 +217,52 @@ class UpdateSessionView(generic.UpdateView, LoginRequiredMixin):
         "active",
     )
 
-    def get_context_data(self, **kwargs):
+    def get_context_data(self, **kwargs: Any) -> dict[str, Any]:
         context = super().get_context_data(**kwargs)
         context["goal_id"] = self.kwargs["goal_id"]
         return context
 
-    def get_queryset(self):
-        return Session.objects.filter(
+    def get_queryset(self) -> QuerySet[Session]:
+        return Session.objects.filter(  # type: ignore
             goal__owner=self.request.user, goal_id=self.kwargs["goal_id"]
         )
 
+    def get_template_names(self):
+        if self.request.htmx and not self.request.htmx.boosted:
+            return ["tracking/htmx/session_form.html"]
+        else:
+            return ["tracking/session_form.html"]
 
-class DeleteSessionView(generic.DeleteView, LoginRequiredMixin):
+
+class DeleteSessionView(  # type: ignore
+    generic.DeleteView[Session, ModelForm[Session]], LoginRequiredMixin
+):
     model = Session
 
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        return context
-
-    def get_queryset(self):
-        return Session.objects.filter(
+    def get_queryset(self) -> QuerySet[Session]:
+        return Session.objects.filter(  # type: ignore
             goal__owner=self.request.user, goal_id=self.kwargs["goal_id"]
         )
 
-    def get_success_url(self):
-        # AI code, might not work if the object is already deleted
+    def get_success_url(self) -> str:
         return self.object.goal.get_absolute_url()
 
+    def get_template_names(self) -> list[str]:
+        if self.request.htmx and not self.request.htmx.boosted:
+            return ["tracking/htmx/session_confirm_delete.html"]
+        else:
+            return ["tracking/session_confirm_delete.html"]
 
-class StartTimerSession(generic.CreateView, LoginRequiredMixin):
+
+class StartTimerSession(
+    generic.CreateView[Session, ModelForm[Session]], LoginRequiredMixin
+):
     model = Session
     fields = ("duration_mins",)
     template_name = "start_timer_session.html"
 
-    def form_valid(self, form):
-        goal = Goal.objects.filter(
+    def form_valid(self, form: ModelForm[Session]) -> HttpResponse:
+        goal = Goal.objects.filter(  # type: ignore
             owner=self.request.user, id=self.kwargs["goal_id"]
         ).first()
         if not goal:
@@ -169,49 +282,63 @@ class StartTimerSession(generic.CreateView, LoginRequiredMixin):
             )
         )
 
-    def get_initial(self):
-        goal = Goal.objects.filter(
+    def get_initial(self) -> dict[str, Any]:
+        goal = Goal.objects.filter(  # type: ignore
             owner=self.request.user, id=self.kwargs["goal_id"]
         ).first()
         if not goal:
             raise ObjectDoesNotExist("Goal not found")
         return {
-            "duration_mins": goal.duration_mins,
+            "duration_mins": goal.mins_remaining,
         }
 
-    def get_context_data(self, **kwargs):
+    def get_context_data(self, **kwargs: Any) -> dict[str, Any]:
         context = super().get_context_data(**kwargs)
         context["goal_id"] = self.kwargs["goal_id"]
         return context
 
+    def get_template_names(self) -> list[str]:
+        if self.request.htmx and not self.request.htmx.boosted:
+            return ["tracking/htmx/start_timer_session.html"]
+        else:
+            return ["tracking/start_timer_session.html"]
 
-class RunningTimerSession(generic.UpdateView, LoginRequiredMixin):
+
+class RunningTimerSession(
+    generic.UpdateView[Session, ModelForm[Session]], LoginRequiredMixin
+):
     model = Session
     fields = ("notes", "duration_mins")
     template_name = "running_timer_session.html"
 
-    def get_context_data(self, **kwargs):
+    def get_context_data(self, **kwargs: Any) -> dict[str, Any]:
         context = super().get_context_data(**kwargs)
         context["goal_id"] = self.kwargs["goal_id"]
         return context
 
-    def form_valid(self, form):
+    def form_valid(self, form: ModelForm[Session]) -> HttpResponse:
         updated_session = form.save(commit=False)
         updated_session.active = False
         updated_session.save()
+        messages.success(
+            self.request,
+            f"{updated_session.duration_mins} minutes spent on {updated_session.goal.name}",
+        )
         return HttpResponseRedirect(
             reverse("goal_detail", kwargs={"pk": self.kwargs["goal_id"]})
         )
 
-    def get_queryset(self):
-        return Session.objects.filter(
+    def get_queryset(self) -> QuerySet[Session]:
+        return Session.objects.filter(  # type: ignore
             goal__owner=self.request.user, goal_id=self.kwargs["goal_id"], active=True
         )
 
 
 @require_GET
 @login_required
-def start_stopwatch_session(request, goal_id):
+def start_stopwatch_session(
+    request: AuthenticatedHttpRequest, goal_id: int
+) -> HttpResponse:
     goal = Goal.objects.filter(
         owner=request.user,
         id=goal_id,
@@ -233,25 +360,31 @@ def start_stopwatch_session(request, goal_id):
     )
 
 
-class RunningStopwatchSession(generic.UpdateView, LoginRequiredMixin):
+class RunningStopwatchSession(
+    generic.UpdateView[Session, ModelForm[Session]], LoginRequiredMixin
+):
     model = Session
     fields = ("notes", "duration_mins")
     template_name = "running_stopwatch_session.html"
 
-    def get_context_data(self, **kwargs):
+    def get_context_data(self, **kwargs: Any) -> dict[str, Any]:
         context = super().get_context_data(**kwargs)
         context["goal_id"] = self.kwargs["goal_id"]
         return context
 
-    def form_valid(self, form):
+    def form_valid(self, form: ModelForm[Session]) -> HttpResponse:
         updated_session = form.save(commit=False)
         updated_session.active = False
         updated_session.save()
+        messages.success(
+            self.request,
+            f"{updated_session.duration_mins} minutes spent on {updated_session.goal.name}",
+        )
         return HttpResponseRedirect(
             reverse("goal_detail", kwargs={"pk": self.kwargs["goal_id"]})
         )
 
-    def get_queryset(self):
-        return Session.objects.filter(
+    def get_queryset(self) -> QuerySet[Session]:
+        return Session.objects.filter(  # type: ignore
             goal__owner=self.request.user, goal_id=self.kwargs["goal_id"], active=True
         )

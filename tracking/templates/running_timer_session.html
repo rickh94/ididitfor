@@ -2,9 +2,11 @@
 {% load customfilters %}
 {% load static %}
 {% block content %}
-    <!-- TODO: change some buttons when the timer ends, send alert or notification -->
     <script id="timer-data" data-duration-mins="{{ session.duration_mins }}"></script>
     <script src="{% static 'timer.js' %}"></script>
+    <audio class="hidden" id="alert">
+      <source src="{% static 'call-to-attention.mp3' %}" type="audio/mpeg">
+    </audio>
     <noscript>
         Javascript is required to use this page.
     </noscript>
@@ -17,6 +19,7 @@
                 <div id="timer"
                      class="flex font-mono justify-center items-center text-center w-full text-8xl sm:text-[10rem] lg:text-[12rem] font-bold pointer-events-none"
                      x-cloak
+                     x-data
                      x-show="$store.timer.ready">
                     <div x-data x-text="$store.timer.mins"></div>
                     <div>:</div>
@@ -25,8 +28,9 @@
                 <div id="timer-controls"
                      class="w-full flex justify-center flex-row-reverse">
                     <button @click="$store.timer.start()"
+                      x-data
                             x-show="!$store.timer.running"
-                            class="flex items-center bg-jade px-5 sm:px-10 pt-2 sm:pt-4 pb-1 sm:pb-2 ml-2 text-2xl sm:text-4xl font-bold text-smoky border-smoky border-b-4 border-r-4 shadow-lg hover:border-t-4 hover:border-l-4 hover:border-r-0 hover:border-b-0 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-smoky teko tracking-wide">
+                            class="flex items-center bg-jade-500 px-5 sm:px-10 pt-2 sm:pt-4 pb-1 sm:pb-2 ml-2 text-2xl sm:text-4xl font-bold text-smoky border-smoky border-b-4 border-r-4 shadow-lg hover:border-t-4 hover:border-l-4 hover:border-r-0 hover:border-b-0 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-smoky teko tracking-wide">
                         <svg xmlns="http://www.w3.org/2000/svg"
                              fill="none"
                              viewBox="0 0 24 24"
@@ -40,6 +44,7 @@
                     </button>
                     <button @click="$store.timer.pause()"
                             x-cloak
+                            x-data
                             x-show="$store.timer.running"
                             class="flex items-center bg-earth px-5 sm:px-10 pt-2 sm:pt-4 pb-1 sm:pb-2 ml-2 text-2xl sm:text-4xl font-bold text-smoky border-smoky border-b-4 border-r-4 shadow-lg hover:border-t-4 hover:border-l-4 hover:border-r-0 hover:border-b-0 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-smoky teko tracking-wide">
                         <svg xmlns="http://www.w3.org/2000/svg"
@@ -53,7 +58,7 @@
                         Pause
                     </button>
                     <button @click="$store.timer.reset()"
-                            class="flex items-center bg-tomato px-5 sm:px-10 pt-2 sm:pt-4 sm:pb-2 pb-1 ml-2 text-2xl sm:text-4xl font-bold text-smoky border-smoky border-b-4 border-r-4 shadow-lg hover:border-t-4 hover:border-l-4 hover:border-r-0 hover:border-b-0 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-smoky teko tracking-wide">
+                            class="flex items-center bg-tomato-500 px-5 sm:px-10 pt-2 sm:pt-4 sm:pb-2 pb-1 ml-2 text-2xl sm:text-4xl font-bold text-smoky border-smoky border-b-4 border-r-4 shadow-lg hover:border-t-4 hover:border-l-4 hover:border-r-0 hover:border-b-0 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-smoky teko tracking-wide">
                         <svg xmlns="http://www.w3.org/2000/svg"
                              fill="none"
                              viewBox="0 0 24 24"
@@ -65,11 +70,10 @@
                         Reset
                     </button>
                 </div>
-                <!-- TODO: make buttons and functions for saving shorter session and deleting session -->
                 <form class="px-4 py-5 sm:p-6 space-y-4" method="post" action="">
                     {% csrf_token %}
                     <div class="my-1 flex flex-col">
-                        <div class="text-tomato text-sm">{{ form.notes.errors }}</div>
+                        <div class="text-tomato-500 text-sm">{{ form.notes.errors }}</div>
                         <label for="{{ form.notes.id_for_label }}" class="teko font-bold text-2xl">{{ form.notes.label }}</label>
                         {{ form.notes|addclass:"form-control h-32" }}
                         {% if field.help_text %}<div class="text-sm montserrat text-neutral-700">{{ form.notes.help_text }}</div>{% endif %}
@@ -81,7 +85,7 @@
                            id="{{ form.duration_mins.id_for_label }}">
                     <div class="flex justify-start flex-row-reverse w-full">
                         <button type="submit"
-                                class="flex items-center bg-jade px-2 sm:px-5 pt-2 pb-1 ml-2 text-xl sm:text-2xl font-bold text-smoky border-smoky border-b-4 border-r-4 shadow-lg hover:border-t-4 hover:border-l-4 hover:border-r-0 hover:border-b-0 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-smoky teko tracking-wide">
+                                class="flex items-center bg-jade-500 px-2 sm:px-5 pt-2 pb-1 ml-2 text-xl sm:text-2xl font-bold text-smoky border-smoky border-b-4 border-r-4 shadow-lg hover:border-t-4 hover:border-l-4 hover:border-r-0 hover:border-b-0 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-smoky teko tracking-wide">
                             <svg xmlns="http://www.w3.org/2000/svg"
                                  fill="none"
                                  viewBox="0 0 24 24"
@@ -92,9 +96,8 @@
                             </svg>
                             Save and End Session
                         </button>
-                        <!-- TODO: make this delete the session -->
-                        <a href="{% url 'goal_detail' goal_id %}"
-                           class="flex items-center bg-tomato px-2 sm:px-5 pt-2 pb-1 text-xl sm:text-2xl font-bold text-smoky border-smoky border-b-4 border-r-4 shadow-lg hover:border-t-4 hover:border-l-4 hover:border-r-0 hover:border-b-0 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-smoky teko tracking-wide">
+                        <a href="{% url 'delete_session' session.goal.id session.id %}"
+                           class="flex items-center bg-tomato-500 px-2 sm:px-5 pt-2 pb-1 text-xl sm:text-2xl font-bold text-smoky border-smoky border-b-4 border-r-4 shadow-lg hover:border-t-4 hover:border-l-4 hover:border-r-0 hover:border-b-0 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-smoky teko tracking-wide">
                             <svg xmlns="http://www.w3.org/2000/svg"
                                  fill="none"
                                  viewBox="0 0 24 24"

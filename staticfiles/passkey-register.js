@@ -13,7 +13,7 @@ async function startRegistration() {
   try {
     attResp = await SimpleWebAuthnBrowser.startRegistration(creationOptions);
   } catch (error) {
-    // Alpine.store('notification').show('Registration Failed', 'Could not register device', 'failure');
+    Alpine.store('notification').notify('Registration Failed', 'Could not register device', 'error', false);
     console.log(error);
     return;
   }
@@ -28,8 +28,9 @@ async function startRegistration() {
   });
 
   if (verificationResponse.ok) {
-    alert("registration completed");
-    // Alpine.store('notification').show('Registration Succeeded', 'You can now log in using just this device!', 'success');
+    Alpine.store('notification').notify('Registration Succeeded', 'You can now log in using just this device!', 'success');
+  } else {
+    Alpine.store('notification').notify('Registration Failed', 'Your device could not be registered', 'error');
   }
 }
 
