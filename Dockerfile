@@ -41,7 +41,7 @@ WORKDIR /app
 
 #COPY --chown=django:django ./app/. .
 COPY ./app/. .
-COPY --from=builder1 /app/ididitfor/static/main.css /app/ididitform/static/main.css
+COPY --from=builder1 /app/static/main.css /app/static/main.css
 
 #USER django
 
