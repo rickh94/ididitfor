@@ -10,18 +10,19 @@
                 <!-- TODO: maybe make this somewhat random -->
                 <p class="text-5xl sm:text-7xl tracking-tight text-gray-800 teko">
                 <span class="tracking-wide">...</span>{{ random_mins }} minutes!</p>
-                <div class="mt-10 flex items-center justify-center gap-x-6 tracking-normal montserrat">
+                <div class="mt-10 flex flex-col sm:flex-row space-y-2 sm:space-y-0 items-center justify-center gap-x-6 tracking-normal montserrat">
                     <a href="{% url 'register' %}"
-                       class="bg-jade-500 px-5 py-2 text-2xl font-semibold text-smoky border-smoky border-b-4 border-r-4 shadow-lg hover:border-t-4 hover:border-l-4 hover:border-r-0 hover:border-b-0 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-smoky">Get
+                       class="bg-jade-500 px-5 py-2 text-3xl lg:text-4xl font-semibold text-smoky border-smoky border-b-4 border-r-4 shadow-lg hover:border-t-4 hover:border-l-4 hover:border-r-0 hover:border-b-0 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-smoky">Get
                     started</a>
                     <a href="#about"
-                       class="text-2xl font-semibold leading-6 text-smoky flex items-center">
+                       class="text-3xl lg:text-4xl font-semibold leading-6 text-smoky flex items-center">
                         <div>Learn more</div>
                         <svg xmlns="http://www.w3.org/2000/svg"
                              fill="none"
                              viewBox="0 0 24 24"
                              stroke-width="2"
                              stroke="currentColor"
+                             aria-hidden="true"
                              class="ml-1 w-8 h-8">
                             <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5" />
                         </svg>

@@ -7,8 +7,6 @@
             data-username-id="{{ form.username.id_for_label }}"
             data-finish-login-endpoint="{% url 'finish_passkey_login' %}"
             data-redirect-to="{% url 'goal_list' %}"></script>
-    <script src="{% static 'webauthn-browser.js' %}"></script>
-    <script src="{% static 'passkey-login.js' %}"></script>
     <main id="main-content"
           class="w-full bg-earth py-40 border-b-4 border-smoky">
         <div id="hero"
@@ -41,10 +39,10 @@
                      x-cloak
                      x-show="!usePassword">
                     <h3 class="text-xl font-bold text-smoky my-2">Login with...</h3>
-                    <div class="flex w-full space-x-2">
+                    <div class="flex max-w-full space-x-2">
                         <button type="button"
                                 @click="usePassword = true"
-                                class="ml-2 flex-1 flex items-center bg-tomato-500 px-4 py-2 text-2xl font-bold text-smoky border-smoky border-b-4 border-r-4 shadow-lg hover:border-t-4 hover:border-l-4 hover:border-r-0 hover:border-b-0 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-smoky">
+                                class="flex-1 flex items-center bg-tomato-500 px-4 py-2 text-lg sm:text-2xl font-bold text-smoky border-smoky border-b-4 border-r-4 shadow-lg hover:border-t-4 hover:border-l-4 hover:border-r-0 hover:border-b-0 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-smoky">
                             <svg xmlns="http://www.w3.org/2000/svg"
                                  fill="none"
                                  viewBox="0 0 24 24"
@@ -57,7 +55,7 @@
                         </button>
                         <button type="button"
                                 @click="startLogin()"
-                                class="ml-2 flex-1 flex items-center space-x-2 bg-jade-500 px-4 py-2 text-2xl font-bold text-smoky border-smoky border-b-4 border-r-4 shadow-lg hover:border-t-4 hover:border-l-4 hover:border-r-0 hover:border-b-0 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-smoky">
+                                class="flex-1 flex items-center space-x-2 bg-jade-500 px-4 py-2 text-xl sm:text-2xl font-bold text-smoky border-smoky border-b-4 border-r-4 shadow-lg hover:border-t-4 hover:border-l-4 hover:border-r-0 hover:border-b-0 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-smoky">
                             <svg xmlns="http://www.w3.org/2000/svg"
                                  fill="none"
                                  viewBox="0 0 24 24"

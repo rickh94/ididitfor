@@ -18,8 +18,10 @@ from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.http import require_GET, require_POST
 from webauthn.helpers.exceptions import InvalidRegistrationResponse
 from webauthn.helpers.structs import (
+    AuthenticatorSelectionCriteria,
     PublicKeyCredentialDescriptor,
     RegistrationCredential,
+    UserVerificationRequirement,
 )
 
 from ididitfor.types import AuthenticatedHttpRequest
@@ -45,6 +47,10 @@ def start_passkey_registration(request: AuthenticatedHttpRequest) -> HttpRespons
         rp_name=settings.WEBAUTHN_SERVER_NAME,
         user_id=str(request.user.id),
         user_name=str(request.user.username),
+        user_display_name=str(request.user),
+        authenticator_selection=AuthenticatorSelectionCriteria(
+            user_verification=UserVerificationRequirement.REQUIRED
+        ),
     )
     challenge = base64.b64encode(pcco.challenge).decode("utf-8")
     request.session["registration_state"] = {
@@ -115,6 +121,7 @@ def start_passkey_login(request: HttpRequest) -> HttpResponse:
     authentication_options = webauthn.generate_authentication_options(
         rp_id=settings.WEBAUTHN_RP_ID,
         allow_credentials=allowed_credentials,
+        user_verification=UserVerificationRequirement.REQUIRED,
     )
 
     request.session["auth_state"] = {

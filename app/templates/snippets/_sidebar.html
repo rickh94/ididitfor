@@ -1,5 +1,5 @@
 <div x-show="$store.nav.open"
-  x-data
+     x-data
      class="relative z-50 lg:hidden"
      role="dialog"
      aria-modal="true"
@@ -52,13 +52,11 @@
     </div>
 </div>
 <!-- Static sidebar for desktop -->
-<div x-data class="hidden lg:fixed lg:inset-y-0 lg:z-40 lg:flex lg:w-72 lg:flex-col teko tracking-wide text-lg border-r-4 border-smoky">
+<div x-data
+     class="hidden lg:fixed lg:inset-y-0 lg:z-40 lg:flex lg:w-72 lg:flex-col teko tracking-wide text-lg border-r-4 border-smoky">
     <!-- Sidebar component, swap this element with another sidebar if you like -->
     <div class="flex grow flex-col gap-y-5 overflow-y-auto bg-tomato-500 px-6">
-        <div class="flex h-16 shrink-0 items-center">
-            <!-- Change logo -->
-            {% include "snippets/_logo.html" %}
-        </div>
+        <a href="{% url 'index' %}" class="flex h-16 shrink-0 items-center">{% include "snippets/_logo.html" %}</a>
         <!-- Templated from same as above -->
         <nav class="flex flex-1 flex-col">
             <ul role="list" class="flex flex-1 flex-col gap-y-7">
@@ -70,7 +68,8 @@
         </nav>
     </div>
 </div>
-<div x-data class="sticky top-0 z-40 flex items-center gap-x-6 bg-tomato-500 px-4 py-4 shadow-sm sm:px-6 lg:hidden border-b-4 border-smoky teko tracking-wide">
+<div x-data
+     class="sticky top-0 z-40 flex items-center gap-x-6 bg-tomato-500 px-4 py-4 shadow-sm sm:px-6 lg:hidden border-b-4 border-smoky teko tracking-wide">
     <button type="button"
             class="-m-2.5 p-2.5 text-smoky lg:hidden"
             @click="$store.nav.openNav()">
@@ -87,3 +86,4 @@
     <div class="flex-1 text-lg font-semibold leading-6 text-smoky">Dashboard</div>
     {% include "snippets/_profile.html" %}
 </div>
+{# vim: se ft=htmldjango : #}

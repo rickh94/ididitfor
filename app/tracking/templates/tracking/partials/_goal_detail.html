@@ -16,25 +16,25 @@
             </div>
             <p class="montserrat text-smoky/80 mx-2 my-4">{{ goal.description }}</p>
             {% if goal.completed %}
-                <p class="text-2xl">
-                    <strong class="font-bold text-jade-600">Done!</strong> You've completed your goal for this {{ goal.get_unit_time_display }}.
-                </p>
+                <h3 class="font-bold text-jade-600 text-2xl">Done!</h3>
+                <p class="text-xl">You've completed your goal for this {{ goal.get_unit_time_display }}.</p>
             {% elif goal.completion_fraction >= 0.75 %}
-                <p class="text-2xl">
-                    <strong class="font-bold text-jade-600">Almost There!</strong> You're close to your goal, just {{ goal.mins_remaining }} minute{{ goal.mins_remaining|pluralize }} left!
+                <h3 class="text-2xl font-bold text-jade-600">Almost There!</h3>
+                <p class="text-xl">
+                    You're close to your goal, just {{ goal.mins_remaining }} minute{{ goal.mins_remaining|pluralize }} left!
                 </p>
             {% elif goal.completion_fraction >= 0.5 %}
                 <p class="text-2xl">
                     <strong class="font-bold text-jade-600">Halfway!</strong> You're about halfway to your goal! You need {{ goal.mins_remaning }} more minute{{ goal.mins_remaning|pluralize }}
                 </p>
             {% elif goal.completion_fraction > 0 %}
-                <p class="text-2xl">
-                    <strong class="font-bold text-jade-600">Keep it going!</strong> You've already put some working toward your goal, {{ goal.mins_remaining }} minute{{ goal.mins_remaining|pluralize }} and you'll be done.
+                <h3 class="text-2xl font-bold text-jade-600">Keep it going!</h3>
+                <p class="text-xl">
+                    You've already put some working toward your goal, {{ goal.mins_remaining }} minute{{ goal.mins_remaining|pluralize }} and you'll be done.
                 </p>
             {% else %}
-                <p class="text-2xl">
-                    <strong class="font-bold text-jade-600">Get Started!</strong> Start a session below and start working toward your goal!
-                </p>
+                <h3 class="text-2xl font-bold text-jade-600">Get Started!</h3>
+                <p class="text-xl">Start a session below and start working toward your goal!</p>
             {% endif %}
         </div>
         <div class="mb-4 mt-2">
