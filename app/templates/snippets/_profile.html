@@ -3,13 +3,13 @@
    hx-target="#main-content"
    hx-swap="outerHTML"
    hx-push-url="{% url 'user_profile' %}"
-   class="flex items-center justify-between gap-x-4 px-2 text-sm font-semibold leading-6 text-smoky teko tracking-wide group">
+   class="flex items-center justify-between gap-x-4 px-2 text-sm font-semibold leading-6 text-smoky teko tracking-wide group truncate">
     <span aria-hidden="true"
           class="text-xl underline group-hover:underline-offset-4">
         {% if request.user.name %}
             {{ name }}
         {% else %}
-            {{ user.email }}
+            {{ user.username }}
         {% endif %}
     </span>
     <span class="sr-only">Your profile</span>
