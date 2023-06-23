@@ -82,7 +82,7 @@ class Goal(models.Model):
 
     @property
     def mins_remaining(self) -> int:
-        return self.duration_mins - self.mins_completed
+        return max(self.duration_mins - self.mins_completed, 0)
 
     @property
     def completion_fraction(self) -> float:
