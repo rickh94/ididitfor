@@ -112,6 +112,10 @@ body {
   font-family: "Montserrat", "sans-serif";
 }
 
+[x-cloak] {
+  display: none !important;
+}
+
 .montserrat {
   font-family: "Montserrat", "sans-serif";
 }
