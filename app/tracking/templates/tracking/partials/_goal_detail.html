@@ -2,7 +2,7 @@
 <main class="py-10 lg:pl-[19rem] px-4 min-h-full"
       id="main-content"
       hx-swap-oob="true">
-    <div class="overflow-hidden bg-earth/20 border-2 border-smoky shadow">
+    <div class="overflow-hidden bg-earth-200/20 border-2 border-smoky shadow">
         <div class="px-4 py-5 sm:p-6">
             <div class="flex justify-between border-b-8 pb-2 border-smoky sm:px-4 items-center">
                 <h1 class="text-left sm:text-center text-xl sm:text-2xl monserrat text-smoky flex-1 block">
@@ -58,7 +58,7 @@
                     </svg>
                 Timer</a>
                 <a href="{% url 'create_stopwatch_session' goal.id %}"
-                   class="bg-earth h-12 px-5 pt-2 pb-1 text-xl font-semibold text-smoky border-smoky border-b-4 border-r-4 shadow-lg hover:border-t-4 hover:border-l-4 hover:border-r-0 hover:border-b-0 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-smoky teko tracking-wide flex items-center">
+                   class="bg-earth-200 h-12 px-5 pt-2 pb-1 text-xl font-semibold text-smoky border-smoky border-b-4 border-r-4 shadow-lg hover:border-t-4 hover:border-l-4 hover:border-r-0 hover:border-b-0 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-smoky teko tracking-wide flex items-center">
                     <svg version="1.1"
                          viewBox="0 0 48 48"
                          width="24"
@@ -93,8 +93,6 @@
                         <a href="{% url 'session_detail' goal.id session.id %}"
                            hx-get="{% url 'session_detail' goal.id session.id %}"
                            hx-push-url="{% url 'session_detail' goal.id session.id %}"
-                           hx-swap="outerHTML"
-                           hx-target="#main-content"
                            class="p-2 text-xl w-full h-full block">
                             <strong class="font-bold text-tomato-500 teko tracking-wider text-2xl">{{ session.duration_mins }}</strong>
                             mins on
@@ -148,7 +146,7 @@
                hx-push-url="{% url 'edit_goal' goal.id %}"
                hx-target="#main-content"
                hx-swap="outerHTML"
-               class="bg-earth px-5 pt-2 pb-1 text-xl font-semibold text-smoky border-smoky border-b-4 border-r-4 shadow-lg hover:border-t-4 hover:border-l-4 hover:border-r-0 hover:border-b-0 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-smoky teko tracking-wide flex items-center">
+               class="bg-earth-200 px-5 pt-2 pb-1 text-xl font-semibold text-smoky border-smoky border-b-4 border-r-4 shadow-lg hover:border-t-4 hover:border-l-4 hover:border-r-0 hover:border-b-0 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-smoky teko tracking-wide flex items-center">
                 <svg xmlns="http://www.w3.org/2000/svg"
                      fill="none"
                      viewBox="0 0 24 24"

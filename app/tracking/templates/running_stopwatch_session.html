@@ -4,7 +4,7 @@
 {% block content %}
     <main class="py-10 lg:pl-[19rem] px-4 min-h-full" id="main-content">
         <script src="{% static 'stopwatch.js' %}"></script>
-        <div class="overflow-hidden bg-earth/20 border-2 border-smoky shadow">
+        <div class="overflow-hidden bg-earth-200/20 border-2 border-smoky shadow">
             <div class="px-4 py-5 sm:p-6">
                 <h1 class="mt-2 mb-4 sm:mt-4 sm:mb-6 text-center text-3xl sm:text-5xl font-bold monserrat border-b-8 px-4 pb-2 sm:px-8 border-smoky text-smoky">
                     Stopwatch
@@ -39,7 +39,7 @@
                             x-cloak
                             x-data
                             x-show="$store.stopwatch.running"
-                            class="flex items-center bg-earth px-5 sm:px-10 pt-2 sm:pt-4 pb-1 sm:pb-2 ml-2 text-2xl sm:text-4xl font-bold text-smoky border-smoky border-b-4 border-r-4 shadow-lg hover:border-t-4 hover:border-l-4 hover:border-r-0 hover:border-b-0 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-smoky teko tracking-wide">
+                            class="flex items-center bg-earth-200 px-5 sm:px-10 pt-2 sm:pt-4 pb-1 sm:pb-2 ml-2 text-2xl sm:text-4xl font-bold text-smoky border-smoky border-b-4 border-r-4 shadow-lg hover:border-t-4 hover:border-l-4 hover:border-r-0 hover:border-b-0 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-smoky teko tracking-wide">
                         <svg xmlns="http://www.w3.org/2000/svg"
                              fill="none"
                              viewBox="0 0 24 24"

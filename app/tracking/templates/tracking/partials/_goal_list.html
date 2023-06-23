@@ -3,7 +3,7 @@
     <ul class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-2"
         role="list">
         {% for goal in goal_list %}
-            <li class="col-span-1 bg-earth border-smoky border-4 shadow flex flex-col h-full">
+            <li class="col-span-1 bg-earth-200 border-smoky border-4 shadow flex flex-col h-full">
                 <div class="flex w-full items-center justify-between space-x-6 p-6 flex-1">
                     <div class="flex-1 truncate">
                         <div class="flex items-center space-x-3">
@@ -17,8 +17,6 @@
                         <div class="flex w-0 flex-1">
                             <a href="{% url 'goal_detail' pk=goal.id %}"
                                hx-get="{% url 'goal_detail' pk=goal.id %}"
-                               hx-swap="outerHTML"
-                               hx-target="#main-content"
                                hx-push-url="{% url 'goal_detail' pk=goal.id %}"
                                class="bg-tomato-500 relative -mr-px inline-flex w-0 flex-1 items-center justify-center gap-x-3 py-3 text-lg font-semibold text-smoky border-r-2 border-t-2 border-smoky border-t-transparent hover:border-t-smoky">
                                 <svg xmlns="http://www.w3.org/2000/svg"
@@ -52,7 +50,7 @@
                 </div>
             </li>
         {% endfor %}
-        <li class="mt-2 sm:mt-0 col-span-1 bg-earth bg-opacity-50 border-dashed border-smoky border-4 shadow flex flex-col h-full">
+        <li class="mt-2 sm:mt-0 col-span-1 bg-earth-200 bg-opacity-50 border-dashed border-smoky border-4 shadow flex flex-col h-full">
             <a href="{% url 'create_goal' %}"
                hx-get="{% url 'create_goal' %}"
                hx-target="#main-content"
