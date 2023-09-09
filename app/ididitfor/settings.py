@@ -128,7 +128,7 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.2/howto/static-files/
 
-STATIC_HOST = os.getenv("STATIC_HOST", "") if DEBUG else ""
+STATIC_HOST = "" if DEBUG else os.getenv("STATIC_HOST", "")
 
 STATIC_URL = f"{STATIC_HOST}/static/"
 
