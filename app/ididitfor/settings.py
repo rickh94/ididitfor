@@ -128,10 +128,9 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.2/howto/static-files/
 
-if DEBUG:
-    STATIC_URL = "/static/"
-else:
-    STATIC_URL = "https://ididitfor-1f530.kxcdn.com/static/"
+STATIC_HOST = os.getenv("STATIC_HOST", "") if DEBUG else ""
+
+STATIC_URL = f"{STATIC_HOST}/static/"
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/3.2/ref/settings/#default-auto-field
