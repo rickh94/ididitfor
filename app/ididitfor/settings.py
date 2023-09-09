@@ -129,9 +129,9 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/3.2/howto/static-files/
 
 if DEBUG:
-    STATIC_URL = "https://ididitfor-1f530.kxcdn.com/static/"
-else:
     STATIC_URL = "/static/"
+else:
+    STATIC_URL = "https://ididitfor-1f530.kxcdn.com/static/"
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/3.2/ref/settings/#default-auto-field
