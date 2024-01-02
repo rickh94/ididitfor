@@ -480,6 +480,21 @@ argon2 = ["argon2-cffi (>=19.1.0)"]
 bcrypt = ["bcrypt"]
 
 [[package]]
+name = "django-honeypot"
+version = "1.1.0"
+description = "Django honeypot field utilities"
+category = "main"
+optional = false
+python-versions = ">=3.8,<4.0"
+files = [
+    {file = "django_honeypot-1.1.0-py3-none-any.whl", hash = "sha256:3eb5447d8531c9357923372c9f06471f1d952dbce757283951706412d2c3fd5a"},
+    {file = "django_honeypot-1.1.0.tar.gz", hash = "sha256:0fe4c977f5d3665a96d22b16cf7f63229a2eef3704b7570fcc417611ebf6bbb2"},
+]
+
+[package.dependencies]
+Django = ">=3.2,<5.1"
+
+[[package]]
 name = "django-htmx"
 version = "1.15.0"
 description = "Extensions for using Django with htmx."
@@ -1457,4 +1472,4 @@ files = [
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.10"
-content-hash = "a9ac88c9499c9ce7ae2789936f289f28f708eaaa6fbd1216613b5a2e46e184bd"
+content-hash = "2eaa2ca335b1952532ededcc9f3413823516f1ccde4ab614ef2021485924be74"

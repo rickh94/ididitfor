@@ -104,7 +104,7 @@ def finish_passkey_registration(request: AuthenticatedHttpRequest) -> HttpRespon
 @csrf_exempt
 def start_passkey_login(request: HttpRequest) -> HttpResponse:
     username = request.POST.get("username")
-    if not username or type(username) != str:
+    if not username or type(username) is not str:
         return HttpResponseBadRequest(b"Username required")
     try:
         user: User = User.objects.get(username=username.lower().strip())

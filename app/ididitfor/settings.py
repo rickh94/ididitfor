@@ -51,6 +51,7 @@ INSTALLED_APPS = [
     "django.contrib.staticfiles",
     "django.contrib.sites",
     "django.contrib.sitemaps",
+    "honeypot",
     "django_htmx",
     "tracking",
     "external",
@@ -62,6 +63,7 @@ MIDDLEWARE = [
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.common.CommonMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
+    "honeypot.middleware.HoneypotMiddleware",
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
@@ -180,3 +182,5 @@ WEBAUTHN_SERVER_NAME = os.getenv("WEBAUTHN_SERVER_NAME")
 WEBAUTHN_ORIGIN = os.getenv("WEBAUTHN_ORIGIN")
 
 SITE_ID = 1
+
+HONEYPOT_FIELD_NAME = "information"
